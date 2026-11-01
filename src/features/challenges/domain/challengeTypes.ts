@@ -20,10 +20,24 @@ export type Challenge = {
   readonly objective?: string;
   readonly solo: string;
   readonly social: string;
+  readonly completionCriteria?: string;
   readonly safetyGuidance?: string;
   readonly rescuePhrases?: readonly RescuePhrase[];
   readonly status?: string;
 };
+
+export function getChallengeLevelLabel(level: ChallengeLevel | string | undefined): string {
+  switch (level) {
+    case 'L1':
+      return 'Ringan';
+    case 'L2':
+      return 'Sedang';
+    case 'L3':
+      return 'Besar';
+    default:
+      return 'Santai';
+  }
+}
 
 export type ChallengeCheckRecord = {
   readonly packageId: string;

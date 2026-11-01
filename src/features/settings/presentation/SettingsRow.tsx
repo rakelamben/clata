@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-remix-icon';
 
-import { colors, radii, spacing } from '../../../ui/theme';
+import { colors, fonts, radii, spacing } from '../../../ui/theme';
 
 interface SettingsRowProps {
   title: string;
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    fontFamily: fonts.bodySemiBold,
     fontSize: 16,
-    fontWeight: '600',
     color: colors.textPrimary,
   },
   destructiveText: {
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   subtitle: {
+    fontFamily: fonts.body,
     fontSize: 13,
     color: colors.textSecondary,
     marginTop: 2,
@@ -147,8 +148,8 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   valueText: {
+    fontFamily: fonts.uiMedium,
     fontSize: 14,
     color: colors.textSecondary,
-    fontWeight: '500',
   },
 });

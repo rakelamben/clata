@@ -6,6 +6,7 @@ export type PackageIdentity = {
   dialectId: string;
   packageVersion: string;
   schemaVersion: number;
+  archiveChecksum?: string;
 };
 
 export type PackageFile = {

@@ -11,6 +11,7 @@ function score(word: PracticeWordCandidate, today?: string): number {
     const days = today && word.lastReviewedAt ? Math.max(0, Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(word.lastReviewedAt)) / 86400000)) : 0;
     return word.strength * (0.97 ** days);
   }
+  if (word.viewed) return 0.2;
   return 0.5;
 }
 

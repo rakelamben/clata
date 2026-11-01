@@ -219,8 +219,13 @@ export function VocabularyScreen() {
     const timer = setInterval(() => {
       if (AppState.currentState !== 'active' || !packageId) return;
       const now = Date.now();
+      const todayStr = container.clock.now().toISOString().slice(0, 10);
+      const sessionPrefix = `vocabulary-${packageId}-${todayStr}`;
+      if (!sessionId.current.startsWith(sessionPrefix)) {
+        sessionId.current = `${sessionPrefix}-${now}-${Math.random().toString(36).slice(2, 8)}`;
+      }
       for (const [itemId, since] of visibleSince.current) {
-        const eventKey = `${packageId}:${itemId}`;
+        const eventKey = `${todayStr}:${packageId}:${itemId}`;
         if (
           now - since < 1000 ||
           recorded.current.has(eventKey) ||
@@ -479,7 +484,6 @@ export function VocabularyScreen() {
         <Pressable style={styles.tooltipScrim} onPress={() => setTooltipWord(null)}>
           <Pressable style={styles.tooltipCard} onPress={(e) => e.stopPropagation()}>
             <View style={styles.tooltipHandle} />
-            <Text style={styles.tooltipEyebrow}>TINGKAT TUTUR</Text>
             <Text style={styles.tooltipTitle}>{tooltipDetails?.title}</Text>
             <Text style={styles.tooltipNote}>{tooltipDetails?.note}</Text>
             <AppPressable
@@ -582,7 +586,7 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   tooltipTitle: {
-    fontFamily: fonts.display,
+    fontFamily: fonts.bodySemiBold,
     fontSize: 26,
     color: colors.navy,
   },

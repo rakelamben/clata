@@ -6,8 +6,9 @@ import { migration0001 } from './0001_initial';
 import { migration0002 } from './0002_progress_indexes';
 import { migration0003 } from './0003_practice_sessions';
 import { migration0004 } from './0004_dialogues_and_challenges';
+import { migration0005 } from './0005_allow_mixed_practice_sessions';
 
-export async function runMigrations(database: DatabasePort, migrations: Migration[] = [migration0001, migration0002, migration0003, migration0004]): Promise<RepositoryResult<void>> {
+export async function runMigrations(database: DatabasePort, migrations: Migration[] = [migration0001, migration0002, migration0003, migration0004, migration0005]): Promise<RepositoryResult<void>> {
   try {
     await database.exec('PRAGMA foreign_keys = ON;');
     const current = await database.get<{ user_version: number }>('PRAGMA user_version');

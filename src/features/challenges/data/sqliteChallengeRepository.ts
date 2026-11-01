@@ -64,6 +64,12 @@ export class SQLiteChallengeRepository implements ChallengeRepository {
             objective: typeof payload.objective === 'string' ? payload.objective : 'Mempraktikkan frasa dasar di situasi santai.',
             solo: String(payload.solo ?? 'Lakukan latihan mandiri dengan mengucapkan frasa target.'),
             social: String(payload.social ?? 'Gunakan frasa ini saat bertegur sapa dengan teman atau keluarga.'),
+            completionCriteria:
+              typeof payload.completionCriteria === 'string'
+                ? payload.completionCriteria
+                : typeof payload.kriteria_selesai === 'string'
+                  ? payload.kriteria_selesai
+                  : 'Aku sudah mencobanya dengan sungguh-sungguh.',
             safetyGuidance: typeof payload.safetyGuidance === 'string' ? payload.safetyGuidance : undefined,
             rescuePhrases: Array.isArray(payload.rescuePhrases) ? (payload.rescuePhrases as ChallengeCardItem['rescuePhrases']) : undefined,
             isChecked: row.checked_at !== null,

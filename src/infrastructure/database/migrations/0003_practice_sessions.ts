@@ -4,7 +4,7 @@ const sql = `
 CREATE TABLE IF NOT EXISTS practice_sessions (
   session_id TEXT PRIMARY KEY NOT NULL,
   package_id TEXT NOT NULL,
-  exercise_type TEXT NOT NULL CHECK (exercise_type IN ('guess_the_word','fill_the_gap')),
+  exercise_type TEXT NOT NULL CHECK (exercise_type IN ('guess_the_word','fill_the_gap','mixed')),
   unit_id TEXT,
   direction TEXT,
   question_count INTEGER NOT NULL CHECK (question_count BETWEEN 1 AND 20),

@@ -33,6 +33,7 @@ export const fonts = {
   body: 'PublicSans_400Regular',
   bodyMedium: 'PublicSans_500Medium',
   bodySemiBold: 'PublicSans_600SemiBold',
+  bodyBold: 'PublicSans_700Bold',
   ui: 'Lexend_400Regular',
   uiMedium: 'Lexend_500Medium',
   uiSemiBold: 'Lexend_600SemiBold',

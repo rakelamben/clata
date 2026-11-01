@@ -10,8 +10,23 @@ export class SQLitePackageStorage implements PackageStorage {
 
   async getActive(packageId: string) {
     const database = await this.getDatabase();
-    const row = await database.get<Record<string, unknown>>('SELECT package_id, language_id, dialect_id, package_version, schema_version FROM installed_packages WHERE package_id = ? AND install_state = ?', [packageId, 'active']);
-    return row ? { packageId: String(row.package_id), languageId: String(row.language_id), dialectId: String(row.dialect_id), packageVersion: String(row.package_version), schemaVersion: Number(row.schema_version) } : null;
+    const row = await database.get<Record<string, unknown>>(
+      'SELECT ip.package_id, ip.language_id, ip.dialect_id, ip.package_version, ip.schema_version, pa.archive_checksum ' +
+      'FROM installed_packages ip ' +
+      'LEFT JOIN package_archives pa ON ip.package_id = pa.package_id AND ip.package_version = pa.package_version ' +
+      'WHERE ip.package_id = ? AND ip.install_state = ?',
+      [packageId, 'active'],
+    );
+    return row
+      ? {
+          packageId: String(row.package_id),
+          languageId: String(row.language_id),
+          dialectId: String(row.dialect_id),
+          packageVersion: String(row.package_version),
+          schemaVersion: Number(row.schema_version),
+          archiveChecksum: row.archive_checksum ? String(row.archive_checksum) : undefined,
+        }
+      : null;
   }
 
   async stage(identity: PackageIdentity, entries: PackageArchiveEntry[]) {
@@ -48,14 +63,19 @@ export class SQLitePackageStorage implements PackageStorage {
       await transaction.run('DELETE FROM sentences WHERE package_id = ?', [packageId]);
       await transaction.run('DELETE FROM dialogues WHERE package_id = ?', [packageId]);
       await transaction.run('DELETE FROM challenges WHERE package_id = ?', [packageId]);
+      await transaction.run('DELETE FROM package_archive_entries WHERE package_id = ? AND package_version = ?', [packageId, staged.identity.packageVersion]);
       for (const entry of staged.entries) {
-        await transaction.run('INSERT INTO package_archive_entries(package_id, package_version, path, data) VALUES (?, ?, ?, ?)', [packageId, staged.identity.packageVersion, entry.path, entry.data instanceof Uint8Array ? entry.data : Uint8Array.from(entry.data as unknown as number[])]);
+        await transaction.run('INSERT OR REPLACE INTO package_archive_entries(package_id, package_version, path, data) VALUES (?, ?, ?, ?)', [packageId, staged.identity.packageVersion, entry.path, entry.data instanceof Uint8Array ? entry.data : Uint8Array.from(entry.data as unknown as number[])]);
       }
       await persistContent(transaction, packageId, staged.identity.packageVersion, staged.entries);
       const sequence = await transaction.get<{ next_sequence: number }>('SELECT next_sequence FROM app_event_sequence WHERE singleton_id = 1');
       const localSequence = Number(sequence?.next_sequence ?? 1);
       await transaction.run('UPDATE app_event_sequence SET next_sequence = ? WHERE singleton_id = 1', [localSequence + 1]);
-      await transaction.run('INSERT INTO learning_events(event_id, local_sequence, device_id, package_id, event_type, source, weight, device_time, received_time, local_date, formula_version, payload_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [`package-updated:${packageId}:${staged.identity.packageVersion}`, localSequence, 'system', packageId, 'package_updated', 'system', 1, this.now(), this.now(), this.now().slice(0, 10), 1, JSON.stringify({ packageId, fromVersion: previous?.package_version, toVersion: staged.identity.packageVersion, archiveChecksum })]);
+      const eventId = `package-updated:${packageId}:${staged.identity.packageVersion}:${localSequence}`;
+      await transaction.run(
+        'INSERT OR REPLACE INTO learning_events(event_id, local_sequence, device_id, package_id, event_type, source, weight, device_time, received_time, local_date, formula_version, payload_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [eventId, localSequence, 'system', packageId, 'package_updated', 'system', 1, this.now(), this.now(), this.now().slice(0, 10), 1, JSON.stringify({ packageId, fromVersion: previous?.package_version, toVersion: staged.identity.packageVersion, archiveChecksum })],
+      );
       await transaction.run('DELETE FROM app_metadata WHERE key = ?', [`package_staging:${packageId}`]);
       await transaction.run('DELETE FROM package_installations WHERE package_id = ?', [packageId]);
     });

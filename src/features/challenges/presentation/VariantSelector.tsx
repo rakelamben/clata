@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, radii, spacing } from '../../../ui/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '../../../ui/theme';
 import type { ChallengeVariantType } from '../domain/challengeTypes';
 
 export function VariantSelector({
@@ -13,25 +13,25 @@ export function VariantSelector({
     <View style={styles.container} accessibilityRole="tablist">
       <Pressable
         accessibilityRole="tab"
-        accessibilityLabel="Varian Solo (Latihan Mandiri)"
+        accessibilityLabel="Latihan Mandiri (Versi Solo)"
         accessibilityState={{ selected: selectedVariant === 'solo' }}
         onPress={() => onSelectVariant('solo')}
         style={[styles.tab, selectedVariant === 'solo' && styles.activeTab]}
       >
         <Text style={[styles.tabText, selectedVariant === 'solo' && styles.activeTabText]}>
-          Versi Solo
+          Latihan Mandiri
         </Text>
       </Pressable>
 
       <Pressable
         accessibilityRole="tab"
-        accessibilityLabel="Varian Sosial (Interaksi Nyata)"
+        accessibilityLabel="Praktik Nyata (Versi Sosial)"
         accessibilityState={{ selected: selectedVariant === 'social' }}
         onPress={() => onSelectVariant('social')}
         style={[styles.tab, selectedVariant === 'social' && styles.activeTab]}
       >
         <Text style={[styles.tabText, selectedVariant === 'social' && styles.activeTabText]}>
-          Versi Sosial
+          Praktik Nyata
         </Text>
       </Pressable>
     </View>
@@ -41,32 +41,36 @@ export function VariantSelector({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: colors.border,
+    backgroundColor: '#EEF1F4',
     borderRadius: radii.control,
     padding: 3,
     marginVertical: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   tab: {
     flex: 1,
-    minHeight: 40,
+    minHeight: Math.max(38, touchTarget - 8),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: radii.control - 2,
   },
   activeTab: {
     backgroundColor: colors.surface,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
+    shadowColor: '#000000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 1 },
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 2,
   },
   tabText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.uiMedium,
+    fontSize: 13,
     color: colors.textSecondary,
+    letterSpacing: 0.1,
   },
   activeTabText: {
-    color: colors.primary,
-    fontWeight: '700',
+    fontFamily: fonts.uiSemiBold,
+    color: colors.navy,
   },
 });

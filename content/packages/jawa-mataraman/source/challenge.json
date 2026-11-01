@@ -1,1 +1,147 @@
-[{"id":"challenge-sapaan","unit_id":"unit-1","level":"L1","solo":"Ucapkan sapaan kepada tetangga.","social":"Gunakan sapaan ini saat berbicara dengan teman.","status":"poc"}]
+[
+    {
+        "id": "challenge-sapaan-pagi",
+        "unit_id": "unit-1",
+        "level": "L1",
+        "title": "Salam Pagi Pertama",
+        "estimatedDurationMinutes": 3,
+        "objective": "Membangun keberanian menyapa orang di sekitar dengan ramah di pagi hari.",
+        "solo": "Berdiri di depan cermin atau di kamarmu, ucapkan 'Sugeng enjing' dengan lantang dan tersenyum sebanyak tiga kali seolah menyapa keluargamu.",
+        "social": "Saat berpapasan dengan satu orang di rumah atau tetangga pagi ini, sapa dengan 'Sugeng enjing' sambil tersenyum ramah.",
+        "completionCriteria": "Aku sudah mengucapkan salam pagi dengan suara jelas.",
+        "safetyGuidance": "Cukup sapa orang yang kamu kenal di rumah atau lingkungan terdekat. Kamu tidak perlu menyapa orang asing sendirian.",
+        "rescuePhrases": [
+            {
+                "id": "rescue-sugeng-enjing",
+                "text": "Sugeng enjing.",
+                "translation": "Selamat pagi.",
+                "registerLabel": "Netral / Sopan",
+                "audio": "audio/kata-sugeng.opus"
+            },
+            {
+                "id": "rescue-nyuwun-sewu",
+                "text": "Nyuwun sewu.",
+                "translation": "Permisi / Maaf.",
+                "registerLabel": "Sopan",
+                "audio": "audio/kata-sugeng.opus"
+            }
+        ],
+        "status": "poc"
+    },
+    {
+        "id": "challenge-matur-nuwun",
+        "unit_id": "unit-1",
+        "level": "L1",
+        "title": "Ungkapan Terima Kasih",
+        "estimatedDurationMinutes": 3,
+        "objective": "Membiasakan diri mengucapkan terima kasih dalam bahasa daerah secara santun.",
+        "solo": "Ucapkan frasa 'Matur nuwun sanget' tiga kali dengan intonasi sopan dan tenang saat berada di kamarmu.",
+        "social": "Ucapkan 'Matur nuwun' kepada orang tua, saudara, atau orang di rumah saat menerima bantuan atau makanan hari ini.",
+        "completionCriteria": "Aku sudah mencoba menyampaikan terima kasih dengan sopan.",
+        "safetyGuidance": "Praktikkan dengan keluarga atau sahabat terdekat di situasi santai tanpa tekanan.",
+        "rescuePhrases": [
+            {
+                "id": "rescue-matur-nuwun",
+                "text": "Matur nuwun sanget.",
+                "translation": "Terima kasih banyak.",
+                "registerLabel": "Krama / Sopan",
+                "audio": "audio/kata-sugeng.opus"
+            },
+            {
+                "id": "rescue-sami-sami",
+                "text": "Sami-sami.",
+                "translation": "Sama-sama.",
+                "registerLabel": "Netral",
+                "audio": "audio/kata-sugeng.opus"
+            }
+        ],
+        "status": "poc"
+    },
+    {
+        "id": "challenge-ajak-makan",
+        "unit_id": "unit-1",
+        "level": "L2",
+        "title": "Mengajak Makan Bersama",
+        "estimatedDurationMinutes": 5,
+        "objective": "Mempraktikkan kosakata kegiatan harian (makan) dengan tingkat tutur yang tepat.",
+        "solo": "Latih dua kalimat ini di depan cermin: 'Ayo mangan bareng' untuk teman sebaya, dan 'Mangga dhahar rumiyin' untuk orang tua.",
+        "social": "Ajak teman atau keluargamu makan bersama menggunakan salah satu frasa ajakan yang telah kamu pelajari.",
+        "completionCriteria": "Aku sudah berani membedakan kata ajakan makan sesuai lawan bicara.",
+        "safetyGuidance": "Perhatikan siapa lawan bicaramu agar tingkatan tutur terasa pas dan santun.",
+        "rescuePhrases": [
+            {
+                "id": "rescue-mangan-bareng",
+                "text": "Ayo mangan bareng.",
+                "translation": "Ayo makan bersama (ngoko / akrab).",
+                "registerLabel": "Akrab",
+                "audio": "audio/kalimat-sugeng.opus"
+            },
+            {
+                "id": "rescue-mangga-dhahar",
+                "text": "Mangga dipundhahar.",
+                "translation": "Silakan dimakan (sopan).",
+                "registerLabel": "Sopan",
+                "audio": "audio/kalimat-sugeng.opus"
+            }
+        ],
+        "status": "poc"
+    },
+    {
+        "id": "challenge-tanya-kabar",
+        "unit_id": "unit-1",
+        "level": "L2",
+        "title": "Bertanya Kabar Singkat",
+        "estimatedDurationMinutes": 7,
+        "objective": "Melakukan percakapan tanya-jawab santai 2 sampai 3 giliran dengan orang di sekitarmu.",
+        "solo": "Simulasikan tanya-jawab sendiri: tanyakan kabar, lalu jawab sendiri dengan 'Alhamdulillah, sae' (baik).",
+        "social": "Sapalah kerabat atau tetangga yang lewat, tanyakan kabarnya secara singkat, lalu dengarkan jawabannya.",
+        "completionCriteria": "Aku sudah mendengarkan dan merespons sapaan kabar secara nyata.",
+        "safetyGuidance": "Jika bingung menjawab kelanjutan percakapan, cukup senyum dan katakan bahwa kamu sedang belajar.",
+        "rescuePhrases": [
+            {
+                "id": "rescue-pripun-kabare",
+                "text": "Pripun kabare? / Kados pundi?",
+                "translation": "Bagaimana kabarnya?",
+                "registerLabel": "Sopan",
+                "audio": "audio/dialog-start.opus"
+            },
+            {
+                "id": "rescue-taksih-sinau",
+                "text": "Nyuwun pangapunten, taksih sinau.",
+                "translation": "Mohon maaf, saya masih belajar.",
+                "registerLabel": "Penyelamat",
+                "audio": "audio/dialog-start.opus"
+            }
+        ],
+        "status": "poc"
+    },
+    {
+        "id": "challenge-cerita-harian",
+        "unit_id": "unit-1",
+        "level": "L3",
+        "title": "Bercerita Tiga Kalimat",
+        "estimatedDurationMinutes": 10,
+        "objective": "Menyusun cerita mini sederhana tentang aktivitas harimu memakai kata yang dipelajari.",
+        "solo": "Ceritakan tiga kegiatanmu hari ini (bangun pagi, makan sega/nasi, dan belajar) dengan suara jelas ke perekam suara ponsel pribadimu.",
+        "social": "Ceritakan kegiatan singkatmu kepada keluarga atau teman yang paham bahasa daerah, boleh sambil melihat catatan kata.",
+        "completionCriteria": "Aku sudah bercerita minimal 3 kalimat kegiatan sehari-hari.",
+        "safetyGuidance": "Boleh membawa catatan kecil bila lupa kata tertentu. Tidak perlu terburu-buru.",
+        "rescuePhrases": [
+            {
+                "id": "rescue-nembe-sinau",
+                "text": "Kula nembe sinau basa Jawa.",
+                "translation": "Saya sedang belajar bahasa Jawa.",
+                "registerLabel": "Sopan",
+                "audio": "audio/dialog-start.opus"
+            },
+            {
+                "id": "rescue-matur-pitulung",
+                "text": "Matur nuwun sanget pitulunganipun.",
+                "translation": "Terima kasih banyak atas bantuannya.",
+                "registerLabel": "Krama Alus",
+                "audio": "audio/kata-sugeng.opus"
+            }
+        ],
+        "status": "poc"
+    }
+]

@@ -37,6 +37,29 @@ export type ItemProgress = {
   lastResult?: number;
 };
 
+export type PracticeExerciseStats = {
+  sessionsCompleted: number;
+  totalAnswered: number;
+  correctAnswered: number;
+  accuracyPercent: number;
+  totalAnswered7Days: number;
+  correctAnswered7Days: number;
+  accuracy7DaysPercent: number;
+};
+
+export type DialogueStats = {
+  sessionsCompleted: number;
+  endings: Record<string, number>;
+};
+
+export type CompletionStats = {
+  guessTheWord: PracticeExerciseStats;
+  fillTheGap: PracticeExerciseStats;
+  dialogue: DialogueStats;
+  aiDialogueRemainingQuota: number;
+  aiDialogueMaxQuota: number;
+};
+
 export type ProgressSnapshot = {
   packageId: string;
   wordStrength: Record<string, ItemProgress>;
@@ -50,4 +73,5 @@ export type ProgressSnapshot = {
   sessionsCompleted: number;
   dialogueScores: Record<string, number>;
   newItemIds: string[];
+  completionStats: CompletionStats;
 };

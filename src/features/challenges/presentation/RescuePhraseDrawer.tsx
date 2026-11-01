@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Icon from 'react-native-remix-icon';
-import { colors, radii, spacing } from '../../../ui/theme';
+import RemixIcon from 'react-native-remix-icon';
+import { colors, fonts, radii, spacing, touchTarget } from '../../../ui/theme';
 import type { RescuePhrase } from '../domain/challengeTypes';
 
 export function RescuePhraseDrawer({
@@ -19,15 +19,15 @@ export function RescuePhraseDrawer({
     <View style={styles.container}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={expanded ? 'Tutup frasa penyelamat' : 'Buka frasa penyelamat'}
+        accessibilityLabel={expanded ? 'Tutup frasa bantuan' : 'Buka frasa bantuan'}
         onPress={() => setExpanded((prev) => !prev)}
         style={styles.toggleHeader}
       >
         <View style={styles.headerLeft}>
-          <Icon name="lifebuoy-line" size={18} color={colors.primary} />
-          <Text style={styles.headerTitle}>Frasa Penyelamat</Text>
+          <RemixIcon name="lifebuoy-line" size={18} color={colors.primary} />
+          <Text style={styles.headerTitle}>Frasa bantuan</Text>
         </View>
-        <Icon
+        <RemixIcon
           name={expanded ? 'arrow-up-s-line' : 'arrow-down-s-line'}
           size={20}
           color={colors.textSecondary}
@@ -37,7 +37,7 @@ export function RescuePhraseDrawer({
       {expanded ? (
         <View style={styles.contentList}>
           <Text style={styles.helperNotice}>
-            Gunakan frasa ini jika kamu merasa canggung atau buntu saat berlatih:
+            Gunakan frasa ini jika kamu merasa canggung atau buntu saat mencoba:
           </Text>
           {phrases.map((phrase) => (
             <View key={phrase.id} style={styles.phraseCard}>
@@ -45,7 +45,9 @@ export function RescuePhraseDrawer({
                 <Text style={styles.phraseText}>{phrase.text}</Text>
                 <Text style={styles.phraseTranslation}>{phrase.translation}</Text>
                 {phrase.registerLabel ? (
-                  <Text style={styles.registerLabel}>{phrase.registerLabel}</Text>
+                  <View style={styles.registerBadge}>
+                    <Text style={styles.registerLabel}>{phrase.registerLabel}</Text>
+                  </View>
                 ) : null}
               </View>
 
@@ -56,7 +58,7 @@ export function RescuePhraseDrawer({
                   onPress={() => onPlayAudio(phrase.audio!)}
                   style={styles.audioButton}
                 >
-                  <Icon name="volume-up-line" size={20} color={colors.primary} />
+                  <RemixIcon name="volume-up-line" size={20} color={colors.primary} />
                 </Pressable>
               ) : null}
             </View>
@@ -74,23 +76,26 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.control,
     backgroundColor: colors.surface,
+    overflow: 'hidden',
   },
   toggleHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: spacing.md,
-    minHeight: 48,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    minHeight: touchTarget,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.xs,
+    gap: spacing.sm,
   },
   headerTitle: {
+    fontFamily: fonts.uiSemiBold,
     fontSize: 14,
-    fontWeight: '700',
     color: colors.primary,
+    letterSpacing: 0.1,
   },
   contentList: {
     paddingHorizontal: spacing.md,
@@ -100,43 +105,59 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   helperNotice: {
-    fontSize: 12,
+    fontFamily: fonts.body,
+    fontSize: 13,
     color: colors.textSecondary,
-    fontStyle: 'italic',
+    lineHeight: 18,
     marginTop: spacing.xs,
   },
   phraseCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.background ?? '#F9F9F9',
-    padding: spacing.sm,
-    borderRadius: 4,
+    backgroundColor: colors.background,
+    padding: spacing.md,
+    borderRadius: radii.control,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   phraseMain: {
     flex: 1,
+    gap: 2,
   },
   phraseText: {
+    fontFamily: fonts.bodyBold,
     fontSize: 15,
-    fontWeight: '700',
-    color: colors.textPrimary,
+    color: colors.navy,
   },
   phraseTranslation: {
+    fontFamily: fonts.body,
     fontSize: 13,
     color: colors.textSecondary,
-    marginTop: 2,
+    lineHeight: 18,
+  },
+  registerBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.tealTint,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginTop: 3,
   },
   registerLabel: {
+    fontFamily: fonts.uiSemiBold,
     fontSize: 11,
-    color: colors.primary,
-    fontWeight: '600',
-    marginTop: 2,
+    color: colors.teal,
   },
   audioButton: {
-    minWidth: 44,
-    minHeight: 44,
+    minWidth: touchTarget - 4,
+    minHeight: touchTarget - 4,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: spacing.xs,
+    backgroundColor: colors.surface,
+    borderRadius: radii.control,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 });

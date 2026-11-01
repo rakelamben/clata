@@ -63,4 +63,9 @@ Folder native yang dihasilkan Expo dan file build lokal tidak perlu di-commit.
 npm test
 npm run lint
 npm run typecheck
+npm run content:validate
 ```
+
+## Spesifikasi Paket Bahasa
+
+Paket bahasa daerah menggunakan Schema Version 2 (tanpa atribut `level`, register 3 nilai: `sopan`, `akrab`, `netral`, dan atribut opsional `catatan`). Lihat [docs/register-definition.md](docs/register-definition.md) dan [docs/content-package-spec.md](docs/content-package-spec.md).

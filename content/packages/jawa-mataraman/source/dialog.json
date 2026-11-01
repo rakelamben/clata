@@ -1,1 +1,723 @@
-[{"id":"dialog-sapaan","title":"Menyapa tetangga","interlocutor":"neighbor","register":"neutral","unit_id":"unit-1","level":"L1","target_word_ids":["kata-sugeng"],"maxNewWords":1,"nodes":[{"id":"n0","speaker":"user","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus","choices":[{"text":"Sugeng enjing.","translation":"Selamat pagi.","quality":"pas","type":"register","next":"n1"},{"text":"Sugeng dalu.","translation":"Selamat malam.","quality":"kurang-pas","type":"register","next":"n1"}],"next":"n1"},{"id":"n1","speaker":"neighbor","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus","choices":[{"text":"Nggih.","translation":"Ya.","quality":"pas","type":"comprehension","next":"n2"},{"text":"Mangan.","translation":"Makan.","quality":"tidak-nyambung","type":"comprehension","next":"n1","repair":{"text":"Maaf?","translation":"Maaf?"}}],"next":"n2"},{"id":"n2","speaker":"user","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus","next":"n3"},{"id":"n3","speaker":"neighbor","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus","next":"n4"},{"id":"n4","speaker":"user","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus","next":"n5"},{"id":"n5","speaker":"neighbor","text":"Sugeng enjing.","translation":"Selamat pagi.","audio":"audio/dialog-start.opus"}],"endings":[{"id":"end","quality":"pas","feedback":"Sapaanmu sudah pas."}],"status":"poc"}]
+[
+  {
+    "id": "dialog-sapaan",
+    "title": "Menyapa Tetangga",
+    "interlocutor": "neighbor",
+    "register": "netral",
+    "unit_id": "unit-1",
+    "contextDescription": "Menyapa dan bertukar kabar singkat dengan tetangga di pagi hari.",
+    "partner": "Tetangga",
+    "userRole": "Warga / Pengunjung",
+    "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-sugeng",
+      "kata-enjing"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "n0",
+        "speaker": "user",
+        "text": "Sugeng enjing, Pak.",
+        "translation": "Selamat pagi, Pak.",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Sugeng enjing, Pak.",
+            "translation": "Selamat pagi, Pak.",
+            "quality": "pas",
+            "type": "register",
+            "next": "n1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Sugeng dalu, Pak.",
+            "translation": "Selamat malam, Pak.",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "n1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "n1"
+      },
+      {
+        "id": "n1",
+        "speaker": "neighbor",
+        "text": "Sugeng enjing. Nembe badhe tindak pundi?",
+        "translation": "Selamat pagi. Mau pergi ke mana?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Badhe tindak dhateng peken, Pak.",
+            "translation": "Mau pergi ke pasar, Pak.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "n2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Kula badhe sare sakniki.",
+            "translation": "Saya mau tidur sekarang.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "n1",
+            "repair": {
+              "text": "Ngapunten, mboten nyambung kalih situasi enjing.",
+              "translation": "Maaf, kurang sesuai konteks jalan pagi.",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "n2"
+      },
+      {
+        "id": "n2",
+        "speaker": "user",
+        "text": "Kula badhe mundhut sayur rumiyin.",
+        "translation": "Saya mau beli sayur dulu.",
+        "audio": "audio/dialog-start.opus",
+        "next": "n3"
+      },
+      {
+        "id": "n3",
+        "speaker": "neighbor",
+        "text": "O nggih, mangga dipun lajengaken.",
+        "translation": "O iya, silakan dilanjutkan.",
+        "audio": "audio/dialog-start.opus",
+        "next": "n4"
+      },
+      {
+        "id": "n4",
+        "speaker": "user",
+        "text": "Matur nuwun, Pak. Nyuwun pamit.",
+        "translation": "Terima kasih, Pak. Permisi.",
+        "audio": "audio/dialog-start.opus",
+        "next": "n5"
+      },
+      {
+        "id": "n5",
+        "speaker": "neighbor",
+        "text": "Nggih, ngatos-atos wonten margi.",
+        "translation": "Iya, hati-hati di jalan.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Sapaanmu dengan tetangga sangat santun dan pas."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Percakapan selesai, namun pilihan sapaanmu terasa kurang pas dan agak canggung untuk suasana pagi dengan tetangga."
+      }
+    ],
+    "status": "poc"
+  },
+  {
+    "id": "dialog-pasar",
+    "title": "Belanja di Pasar",
+    "interlocutor": "vendor",
+    "register": "netral",
+    "unit_id": "unit-1",
+    "contextDescription": "Menanyakan harga dan membeli bahan makanan di pasar tradisional.",
+    "partner": "Penjual Pasar",
+    "userRole": "Pembeli",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-peken",
+      "kata-sekul"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "p0",
+        "speaker": "user",
+        "text": "Nyuwun sewu Bu, reginipun lombok pinten?",
+        "translation": "Permisi Bu, harga cabainya berapa?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Nyuwun sewu Bu, reginipun pinten?",
+            "translation": "Permisi Bu, harganya berapa?",
+            "quality": "pas",
+            "type": "register",
+            "next": "p1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Pinten iki regane?",
+            "translation": "Berapa ini harganya?",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "p1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "p1"
+      },
+      {
+        "id": "p1",
+        "speaker": "vendor",
+        "text": "Sedasa ewu setunggal kilo, Mas.",
+        "translation": "Sepuluh ribu satu kilo, Mas.",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Kula mundhut setunggal kilo nggih, Bu.",
+            "translation": "Saya beli satu kilo ya, Bu.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "p2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Kula badhe siram toya.",
+            "translation": "Saya mau mandi air.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "p1",
+            "repair": {
+              "text": "Kok siram? Badhe tumbas lombok menapa mboten?",
+              "translation": "Kok mandi? Mau beli cabai apa tidak?",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "p2"
+      },
+      {
+        "id": "p2",
+        "speaker": "user",
+        "text": "Menika artanipun pas nggih, Bu.",
+        "translation": "Ini uangnya pas ya, Bu.",
+        "audio": "audio/dialog-start.opus",
+        "next": "p3"
+      },
+      {
+        "id": "p3",
+        "speaker": "vendor",
+        "text": "Matur nuwun sanget Mas, mangga.",
+        "translation": "Terima kasih banyak Mas, silakan.",
+        "audio": "audio/dialog-start.opus",
+        "next": "p4"
+      },
+      {
+        "id": "p4",
+        "speaker": "user",
+        "text": "Sami-sami Bu, nyuwun pamit.",
+        "translation": "Sama-sama Bu, permisi.",
+        "audio": "audio/dialog-start.opus",
+        "next": "p5"
+      },
+      {
+        "id": "p5",
+        "speaker": "vendor",
+        "text": "Nggih mangga, benjing mampir malih.",
+        "translation": "Iya silakan, besok mampir lagi.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Transaksi belanja di pasar berhasil dengan santun."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Belanja berhasil selesai, tetapi ragam tutur yang kamu gunakan terdengar kaku dan kurang lazim di pasar."
+      }
+    ],
+    "status": "poc"
+  },
+  {
+    "id": "dialog-tamu",
+    "title": "Menerima Tamu",
+    "interlocutor": "guest",
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "contextDescription": "Menyambut tamu yang bertandang ke rumah dengan santun.",
+    "partner": "Tamu Rumah",
+    "userRole": "Tuan Rumah",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-sugeng",
+      "kata-griya"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "t0",
+        "speaker": "user",
+        "text": "Sugeng rawuh Pak, mangga pinarak lenggah.",
+        "translation": "Selamat datang Pak, silakan duduk.",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Sugeng rawuh, mangga pinarak.",
+            "translation": "Selamat datang, mari duduk.",
+            "quality": "pas",
+            "type": "register",
+            "next": "t1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Ayo mlebu kene lungguh.",
+            "translation": "Ayo masuk sini duduk.",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "t1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "t1"
+      },
+      {
+        "id": "t1",
+        "speaker": "guest",
+        "text": "Matur nuwun Mas, kados pundi kabaripun?",
+        "translation": "Terima kasih Mas, bagaimana kabarnya?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Pangestunipun sae, Pak.",
+            "translation": "Berkat doa Anda, baik Pak.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "t2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Sekulipun sampun telas.",
+            "translation": "Nasinya sudah habis.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "t1",
+            "repair": {
+              "text": "Kula tanglet kabar, kok sekul?",
+              "translation": "Saya menanyakan kabar, kok menjawab nasi?",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "t2"
+      },
+      {
+        "id": "t2",
+        "speaker": "user",
+        "text": "Mangga dipun unjuk wedangipun.",
+        "translation": "Silakan diminum minumannya.",
+        "audio": "audio/dialog-start.opus",
+        "next": "t3"
+      },
+      {
+        "id": "t3",
+        "speaker": "guest",
+        "text": "Wah matur nuwun sanget, ngrepoti niki.",
+        "translation": "Wah terima kasih banyak, merepotkan ini.",
+        "audio": "audio/dialog-start.opus",
+        "next": "t4"
+      },
+      {
+        "id": "t4",
+        "speaker": "user",
+        "text": "Mboten napa-napa Pak, sakwontenipun.",
+        "translation": "Tidak apa-apa Pak, seadanya.",
+        "audio": "audio/dialog-start.opus",
+        "next": "t5"
+      },
+      {
+        "id": "t5",
+        "speaker": "guest",
+        "text": "Nggih Mas, matur nuwun panyambutanipun.",
+        "translation": "Iya Mas, terima kasih penyambutannya.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Penyambutan tamu sangat ramah dan sopan."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Tamu telah disambut, namun tata krama bahasamu masih kurang luwes dan register yang dipilih kurang tepat."
+      }
+    ],
+    "status": "poc"
+  },
+  {
+    "id": "dialog-warung",
+    "title": "Pesan Makanan di Warung",
+    "interlocutor": "seller",
+    "register": "netral",
+    "unit_id": "unit-1",
+    "contextDescription": "Memesan hidangan makan siang dan menanyakan minuman di warung makan.",
+    "partner": "Pemilik Warung",
+    "userRole": "Pelanggan",
+    "avatar": "https://images.unsplash.com/photo-1548142813-c348350df52b?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-mangan",
+      "kata-nedha",
+      "kata-sekul"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "w0",
+        "speaker": "user",
+        "text": "Nyuwun sewu Bu, taksih wonten soto ayam?",
+        "translation": "Permisi Bu, masih ada soto ayam?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Nyuwun sewu, taksih wonten soto?",
+            "translation": "Permisi, masih ada soto?",
+            "quality": "pas",
+            "type": "register",
+            "next": "w1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Isih ana panganan opo ora?",
+            "translation": "Masih ada makanan apa tidak?",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "w1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "w1"
+      },
+      {
+        "id": "w1",
+        "speaker": "seller",
+        "text": "Taksih Mas, sekulipun dipun pisah menapa dipun campur?",
+        "translation": "Masih Mas, nasinya dipisah atau dicampur?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Dipun pisah mawon Bu, kalih teh anget setunggal.",
+            "translation": "Dipisah saja Bu, dan teh hangat satu.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "w2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Kula badhe tilem wonten kamar.",
+            "translation": "Saya mau tidur di kamar.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "w1",
+            "repair": {
+              "text": "Wonten warung kok tilem, Mas?",
+              "translation": "Di warung kok tidur, Mas?",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "w2"
+      },
+      {
+        "id": "w2",
+        "speaker": "user",
+        "text": "Mangga dipun damelaken rumiyin Bu.",
+        "translation": "Silakan dibuatkan dulu Bu.",
+        "audio": "audio/dialog-start.opus",
+        "next": "w3"
+      },
+      {
+        "id": "w3",
+        "speaker": "seller",
+        "text": "Nggih Mas, sekedhap dipun tengga.",
+        "translation": "Iya Mas, sebentar ditunggu.",
+        "audio": "audio/dialog-start.opus",
+        "next": "w4"
+      },
+      {
+        "id": "w4",
+        "speaker": "user",
+        "text": "Matur nuwun Bu.",
+        "translation": "Terima kasih Bu.",
+        "audio": "audio/dialog-start.opus",
+        "next": "w5"
+      },
+      {
+        "id": "w5",
+        "speaker": "seller",
+        "text": "Menika sotonipun, mangga dipun rahabi.",
+        "translation": "Ini sotonya, silakan dinikmati.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Pemesanan di warung berlangsung sopan dan lancar."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Pesanan makanan selesai, namun gaya bahasamu terasa kurang pas untuk suasana percakapan di warung."
+      }
+    ],
+    "status": "poc"
+  },
+  {
+    "id": "dialog-arah",
+    "title": "Menanyakan Arah Jalan",
+    "interlocutor": "stranger",
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "contextDescription": "Menanyakan arah jalan menuju stasiun kepada sesama warga di jalan.",
+    "partner": "Warga Sekitar",
+    "userRole": "Pejalan Kaki",
+    "avatar": "https://images.unsplash.com/photo-1516011362164-3095a82b0af9?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-mlampah",
+      "kata-tindak"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "a0",
+        "speaker": "user",
+        "text": "Nyuwun sewu Pak, margi dhateng stasiun pundi nggih?",
+        "translation": "Permisi Pak, jalan menuju stasiun sebelah mana ya?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Nyuwun sewu Pak, margi dhateng stasiun pundi?",
+            "translation": "Permisi Pak, jalan menuju stasiun mana?",
+            "quality": "pas",
+            "type": "register",
+            "next": "a1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Stasiun nang endi dalane?",
+            "translation": "Stasiun di mana jalannya?",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "a1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "a1"
+      },
+      {
+        "id": "a1",
+        "speaker": "stranger",
+        "text": "Lurus mawon Mas, mangke wonten prapatan menggok nengen.",
+        "translation": "Lurus saja Mas, nanti di perempatan belok kanan.",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Matur nuwun sanget pitedahipun, Pak.",
+            "translation": "Terima kasih banyak petunjuknya, Pak.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "a2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Kula mboten purun nedha sekul.",
+            "translation": "Saya tidak mau makan nasi.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "a1",
+            "repair": {
+              "text": "Kula pitedah margi, kok nedha sekul?",
+              "translation": "Saya menunjukkan jalan, kok menolak makan nasi?",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "a2"
+      },
+      {
+        "id": "a2",
+        "speaker": "user",
+        "text": "Menapa taksih tebih saking mriki Pak?",
+        "translation": "Apakah masih jauh dari sini Pak?",
+        "audio": "audio/dialog-start.opus",
+        "next": "a3"
+      },
+      {
+        "id": "a3",
+        "speaker": "stranger",
+        "text": "Caket kok Mas, naming gangsal menit mlampah.",
+        "translation": "Dekat kok Mas, hanya lima menit jalan kaki.",
+        "audio": "audio/dialog-start.opus",
+        "next": "a4"
+      },
+      {
+        "id": "a4",
+        "speaker": "user",
+        "text": "Matur nuwun sanget Pak, nyuwun pamit.",
+        "translation": "Terima kasih banyak Pak, mohon pamit.",
+        "audio": "audio/dialog-start.opus",
+        "next": "a5"
+      },
+      {
+        "id": "a5",
+        "speaker": "stranger",
+        "text": "Nggih Mas, sami-sami, ngatos-atos.",
+        "translation": "Iya Mas, sama-sama, hati-hati.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Menanyakan arah dengan tingkat tutur krama yang tepat."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Arah jalan berhasil ditanyakan, tetapi pilihan kata kramamu masih campur aduk dan kurang santun kepada orang baru."
+      }
+    ],
+    "status": "poc"
+  },
+  {
+    "id": "dialog-pamit",
+    "title": "Pamit Pulang",
+    "interlocutor": "host",
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "contextDescription": "Berpamitan kepada tuan rumah setelah berkunjung silaturahmi.",
+    "partner": "Tuan Rumah",
+    "userRole": "Tamu",
+    "avatar": "https://images.unsplash.com/photo-1585917170055-e40d30c73414?crop=faces&fit=crop&h=160&w=160&q=80",
+    "target_word_ids": [
+      "kata-sonten",
+      "kata-sugeng"
+    ],
+    "maxNewWords": 2,
+    "nodes": [
+      {
+        "id": "pm0",
+        "speaker": "user",
+        "text": "Nyuwun pangapunten Pak, sampun sonten, kula nyuwun pamit.",
+        "translation": "Mohon maaf Pak, sudah sore, saya mohon pamit.",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Kula nyuwun pamit wangsul rumiyin Pak.",
+            "translation": "Saya mohon pamit pulang dulu Pak.",
+            "quality": "pas",
+            "type": "register",
+            "next": "pm1",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Aku tak mulih saiki ya.",
+            "translation": "Aku tak pulang sekarang ya.",
+            "quality": "kurang-pas",
+            "type": "register",
+            "next": "pm1",
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "pm1"
+      },
+      {
+        "id": "pm1",
+        "speaker": "host",
+        "text": "Kok kesusu Mas, mboten nyipeng kemawon?",
+        "translation": "Kok terburu-buru Mas, tidak menginap saja?",
+        "audio": "audio/dialog-start.opus",
+        "choices": [
+          {
+            "text": "Mboten Pak, benjing enjing wonten padamelan.",
+            "translation": "Tidak Pak, besok pagi ada pekerjaan.",
+            "quality": "pas",
+            "type": "comprehension",
+            "next": "pm2",
+            "audio": "audio/dialog-start.opus"
+          },
+          {
+            "text": "Kula mundhut lombok setunggal kilo.",
+            "translation": "Saya membeli cabai satu kilo.",
+            "quality": "tidak-nyambung",
+            "type": "comprehension",
+            "next": "pm1",
+            "repair": {
+              "text": "Kok tumbas lombok wonten mriki?",
+              "translation": "Kok membeli cabai di sini?",
+              "audio": "audio/dialog-start.opus"
+            },
+            "audio": "audio/dialog-start.opus"
+          }
+        ],
+        "next": "pm2"
+      },
+      {
+        "id": "pm2",
+        "speaker": "user",
+        "text": "Matur nuwun sanget sampun dipun tampi kanthi sae.",
+        "translation": "Terima kasih banyak sudah diterima dengan baik.",
+        "audio": "audio/dialog-start.opus",
+        "next": "pm3"
+      },
+      {
+        "id": "pm3",
+        "speaker": "host",
+        "text": "Sami-sami Mas, matur nuwun sampun kersa rawuh.",
+        "translation": "Sama-sama Mas, terima kasih sudah bersedia datang.",
+        "audio": "audio/dialog-start.opus",
+        "next": "pm4"
+      },
+      {
+        "id": "pm4",
+        "speaker": "user",
+        "text": "Nggih Pak, nyuwun pamit. Sugeng sonten.",
+        "translation": "Iya Pak, mohon pamit. Selamat sore.",
+        "audio": "audio/dialog-start.opus",
+        "next": "pm5"
+      },
+      {
+        "id": "pm5",
+        "speaker": "host",
+        "text": "Sugeng sonten Mas, ngatos-atos wonten dalan.",
+        "translation": "Selamat sore Mas, hati-hati di jalan.",
+        "audio": "audio/dialog-start.opus",
+        "next": "end"
+      }
+    ],
+    "endings": [
+      {
+        "id": "end-pas",
+        "quality": "pas",
+        "feedback": "Pamitan silaturahmi berlangsung santun dan hangat."
+      },
+      {
+        "id": "end-kurang-pas",
+        "quality": "kurang-pas",
+        "feedback": "Pamitan selesai, tetapi ungkapan kesantunanmu masih canggung dan ragam tutur yang dipakai kurang tepat."
+      }
+    ],
+    "status": "poc"
+  }
+]

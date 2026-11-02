@@ -16,6 +16,7 @@ export const colors = {
   navyTint: '#EAF0F3',
   tealTint: '#E7F2F2',
   magentaTint: '#F8E7ED',
+  orangeTint: '#F8EBE6',
 } as const;
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 40 } as const;

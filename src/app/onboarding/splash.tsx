@@ -3,27 +3,41 @@ import { useEffect } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useApp } from '../../context/AppContext';
 import { colors, fonts, radii, spacing } from '../../ui/theme';
 
 export default function SplashScreen() {
+  const { isInitialized, isOnboardingCompleted, activePackageId } = useApp();
+
   useEffect(() => {
+    if (!isInitialized) return;
+
     const timer = setTimeout(() => {
-      router.replace('/onboarding/intro-1');
-    }, 1500);
+      if (isOnboardingCompleted && activePackageId) {
+        router.replace('/(tabs)/kata');
+      } else {
+        router.replace('/onboarding/intro-1');
+      }
+    }, 1200);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isInitialized, isOnboardingCompleted, activePackageId]);
 
-  const handlePress = () => {
-    router.replace('/onboarding/intro-1');
+  const handleManualProceed = () => {
+    if (!isInitialized) return;
+    if (isOnboardingCompleted && activePackageId) {
+      router.replace('/(tabs)/kata');
+    } else {
+      router.replace('/onboarding/intro-1');
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Pressable
-        accessibilityLabel="Lanjut ke pengenalan aplikasi"
+        accessibilityLabel="Memuat status aplikasi Clata"
         accessibilityRole="button"
-        onPress={handlePress}
+        onPress={handleManualProceed}
         style={styles.container}
       >
         <View style={styles.content}>
@@ -73,21 +87,23 @@ const styles = StyleSheet.create({
     fontFamily: fonts.display,
     fontSize: 52,
     color: colors.surface,
+    lineHeight: 56,
   },
   brandTitle: {
     fontFamily: fonts.display,
     fontSize: 40,
     color: colors.navy,
-    letterSpacing: -0.5,
+    marginBottom: spacing.xs,
   },
   brandTagline: {
-    fontFamily: fonts.bodyMedium,
-    fontSize: 15,
+    fontFamily: fonts.body,
+    fontSize: 16,
     color: colors.textSecondary,
-    marginTop: spacing.xs,
     letterSpacing: 0.5,
   },
   footer: {
-    paddingBottom: spacing.lg,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

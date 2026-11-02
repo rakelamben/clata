@@ -1,132 +1,175 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-remix-icon';
 
+import { useApp } from '../../context/AppContext';
+import { pickLocalPackageFile, type PickedPackageFile } from '../../infrastructure/device/filePicker';
 import { AppPressable } from '../../ui/AppPressable';
 import { colors, fonts, radii, spacing, touchTarget } from '../../ui/theme';
 
-interface PackageOption {
-  id: string;
-  name: string;
-  dialect: string;
-  description: string;
-  tag?: string;
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(1)} KB`;
+  return `${(kb / 1024).toFixed(1)} MB`;
 }
 
-const SAMPLE_PACKAGES: readonly PackageOption[] = [
-  {
-    id: 'jawa-mataraman',
-    name: 'Bahasa Jawa',
-    dialect: 'Dialek Mataraman',
-    description: 'Yogyakarta, Surakarta, Madiun & sekitarnya',
-    tag: 'Tersedia Offline',
-  },
-  {
-    id: 'sunda-priangan',
-    name: 'Bahasa Sunda',
-    dialect: 'Dialek Priangan',
-    description: 'Bandung, Garut, Sumedang & sekitarnya',
-  },
-  {
-    id: 'minangkabau',
-    name: 'Bahasa Minangkabau',
-    dialect: 'Dialek Baku',
-    description: 'Padang, Agam, Bukittinggi & sekitarnya',
-  },
-  {
-    id: 'bali-dataran',
-    name: 'Bahasa Bali',
-    dialect: 'Dialek Dataran',
-    description: 'Denpasar, Gianyar, Badung & Tabanan',
-  },
-];
-
 export default function SelectPackageScreen() {
-  const [selectedIds, setSelectedIds] = useState<string[]>(['jawa-mataraman']);
+  const { stagedArchive, setStagedArchive } = useApp();
+  const [selectedFile, setSelectedFile] = useState<PickedPackageFile | null>(
+    stagedArchive
+      ? {
+          name: stagedArchive.fileName,
+          sizeBytes: stagedArchive.sizeBytes,
+          buffer: stagedArchive.buffer,
+        }
+      : null,
+  );
+  const [isPicking, setIsPicking] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const toggleSelect = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
-    );
+  const handleBack = () => {
+    router.back();
   };
 
-  const handleNext = () => {
+  const handlePickFile = async () => {
+    try {
+      setIsPicking(true);
+      setErrorMessage(null);
+      const picked = await pickLocalPackageFile();
+      if (picked) {
+        setSelectedFile(picked);
+        setStagedArchive({
+          buffer: picked.buffer,
+          fileName: picked.name,
+          sizeBytes: picked.sizeBytes,
+        });
+      }
+    } catch (err) {
+      setErrorMessage(`Gagal memilih berkas: ${String(err)}`);
+    } finally {
+      setIsPicking(false);
+    }
+  };
+
+  const handleProceed = () => {
+    if (!selectedFile) return;
+    setStagedArchive({
+      buffer: selectedFile.buffer,
+      fileName: selectedFile.name,
+      sizeBytes: selectedFile.sizeBytes,
+    });
     router.push('/onboarding/preparing');
   };
 
-  const canProceed = selectedIds.length > 0;
+  const canProceed = Boolean(selectedFile);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
+          <AppPressable
+            accessibilityLabel="Kembali ke halaman sebelumnya"
+            accessibilityRole="button"
+            onPress={handleBack}
+            style={styles.backButton}
+          >
+            <Icon color={colors.navy} name="arrow-left-line" size={24} />
+          </AppPressable>
+
           <Text accessibilityRole="header" style={styles.title}>
-            Pilih Bahasa Awal
+            Unggah Paket Bahasa
           </Text>
+
           <Text style={styles.description}>
-            Pilih satu atau beberapa bahasa daerah yang ingin kamu mulai pelajari:
+            Pilih berkas paket bahasa (.clata atau .zip) dari penyimpanan perangkatmu untuk
+            menyiapkan ruang belajar lokal.
           </Text>
         </View>
 
-        <ScrollView
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          style={styles.scrollView}
-        >
-          {SAMPLE_PACKAGES.map((pkg) => {
-            const isSelected = selectedIds.includes(pkg.id);
-            return (
-              <AppPressable
-                key={pkg.id}
-                accessibilityLabel={`${pkg.name}, ${pkg.dialect}`}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: isSelected }}
-                onPress={() => toggleSelect(pkg.id)}
-              >
-                <View style={[styles.packageCard, isSelected && styles.packageCardSelected]}>
-                  <View style={styles.packageInfo}>
-                    <View style={styles.titleRow}>
-                      <Text style={styles.packageName}>{pkg.name}</Text>
-                      {pkg.tag ? (
-                        <View style={styles.tagBadge}>
-                          <Text style={styles.tagBadgeText}>{pkg.tag}</Text>
-                        </View>
-                      ) : null}
-                    </View>
-                    <Text style={styles.packageDialect}>{pkg.dialect}</Text>
-                    <Text style={styles.packageDescription}>{pkg.description}</Text>
-                  </View>
+        <View style={styles.centerSection}>
+          {!selectedFile ? (
+            <View style={styles.dropzone}>
+              <View style={styles.iconCircle}>
+                <Icon color={colors.primary} name="folder-zip-line" size={44} />
+              </View>
 
-                  <View style={styles.checkIcon}>
-                    <Icon
-                      color={isSelected ? colors.primary : colors.borderStrong}
-                      name={isSelected ? 'checkbox-circle-fill' : 'checkbox-blank-circle-line'}
-                      size={26}
-                    />
-                  </View>
-                </View>
+              <Text style={styles.dropzoneTitle}>Pilih Berkas .clata / .zip</Text>
+              <Text style={styles.dropzoneSubtitle}>
+                Mendukung arsip resmi .clata atau .zip (maks. 10 MB)
+              </Text>
+
+              <AppPressable
+                accessibilityLabel="Buka pengelola berkas perangkat"
+                accessibilityRole="button"
+                disabled={isPicking}
+                onPress={() => void handlePickFile()}
+                style={styles.browseButton}
+              >
+                {isPicking ? (
+                  <ActivityIndicator color={colors.teal} size="small" />
+                ) : (
+                  <>
+                    <Icon color={colors.teal} name="folder-open-line" size={20} />
+                    <Text style={styles.browseButtonText}>Buka File Manager</Text>
+                  </>
+                )}
               </AppPressable>
-            );
-          })}
-        </ScrollView>
+            </View>
+          ) : (
+            <View style={styles.selectedCard}>
+              <View style={styles.selectedRow}>
+                <View style={styles.selectedIconBox}>
+                  <Icon color={colors.primary} name="file-check-fill" size={32} />
+                </View>
+
+                <View style={styles.selectedInfo}>
+                  <Text numberOfLines={1} style={styles.selectedFileName}>
+                    {selectedFile.name}
+                  </Text>
+                  <Text style={styles.selectedMeta}>
+                    {formatBytes(selectedFile.sizeBytes)} • Format didukung
+                  </Text>
+                </View>
+
+                <AppPressable
+                  accessibilityLabel="Ganti berkas paket bahasa"
+                  accessibilityRole="button"
+                  onPress={() => void handlePickFile()}
+                  style={styles.changeButton}
+                >
+                  <Text style={styles.changeButtonText}>Ganti</Text>
+                </AppPressable>
+              </View>
+            </View>
+          )}
+
+          {errorMessage ? (
+            <View style={styles.errorBanner}>
+              <Icon color={colors.magenta} name="error-warning-fill" size={20} />
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            </View>
+          ) : null}
+        </View>
 
         <View style={styles.actionSection}>
           <AppPressable
-            accessibilityLabel="Lanjut menyiapkan paket bahasa"
+            accessibilityLabel="Pasang paket bahasa terpilih"
             accessibilityRole="button"
-            accessibilityState={{ disabled: !canProceed }}
-            onPress={canProceed ? handleNext : undefined}
+            disabled={!canProceed}
+            onPress={handleProceed}
           >
-            <View
-              style={[
-                styles.primaryButton,
-                !canProceed && styles.primaryButtonDisabled,
-              ]}
-            >
-              <Text style={styles.primaryButtonText}>Lanjut</Text>
-              <Icon color={colors.surface} name="arrow-right-line" size={20} />
+            <View style={[styles.primaryButton, !canProceed && styles.primaryButtonDisabled]}>
+              <Text style={[styles.primaryButtonText, !canProceed && styles.primaryButtonTextDisabled]}>
+                Pasang Paket Bahasa
+              </Text>
+              <Icon
+                color={canProceed ? colors.surface : colors.borderStrong}
+                name="arrow-right-line"
+                size={20}
+              />
             </View>
           </AppPressable>
         </View>
@@ -142,18 +185,25 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
+    paddingVertical: spacing.lg,
   },
   header: {
-    marginBottom: spacing.lg,
-    gap: spacing.xs,
+    gap: spacing.sm,
+    paddingTop: spacing.xs,
+  },
+  backButton: {
+    width: touchTarget,
+    height: touchTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -spacing.xs,
   },
   title: {
     fontFamily: fonts.display,
     fontSize: 28,
-    lineHeight: 34,
+    lineHeight: 36,
     color: colors.navy,
   },
   description: {
@@ -162,88 +212,143 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: colors.textSecondary,
   },
-  scrollView: {
+  centerSection: {
     flex: 1,
+    justifyContent: 'center',
+    gap: spacing.lg,
   },
-  listContent: {
-    gap: spacing.md,
-    paddingBottom: spacing.lg,
-  },
-  packageCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  dropzone: {
     backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: colors.border,
-    padding: spacing.lg,
-  },
-  packageCardSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.surface,
-  },
-  packageInfo: {
-    flex: 1,
-    gap: spacing.xs,
-    paddingRight: spacing.md,
-  },
-  titleRow: {
-    flexDirection: 'row',
+    borderStyle: 'dashed',
+    borderRadius: radii.sheet,
+    padding: spacing.xl,
     alignItems: 'center',
     gap: spacing.sm,
-    flexWrap: 'wrap',
   },
-  packageName: {
-    fontFamily: fonts.uiSemiBold,
+  iconCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: radii.sheet,
+    backgroundColor: colors.magentaTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xs,
+  },
+  dropzoneTitle: {
+    fontFamily: fonts.bodyBold,
     fontSize: 17,
     color: colors.navy,
   },
-  tagBadge: {
-    backgroundColor: colors.tealTint,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: radii.control,
-  },
-  tagBadgeText: {
-    fontFamily: fonts.uiMedium,
-    fontSize: 11,
-    color: colors.teal,
-  },
-  packageDialect: {
-    fontFamily: fonts.bodyMedium,
-    fontSize: 14,
-    color: colors.primary,
-  },
-  packageDescription: {
+  dropzoneSubtitle: {
     fontFamily: fonts.body,
     fontSize: 13,
-    lineHeight: 18,
     color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
   },
-  checkIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  actionSection: {
-    paddingVertical: spacing.sm,
-  },
-  primaryButton: {
-    minHeight: touchTarget,
-    backgroundColor: colors.primary,
-    borderRadius: radii.control,
+  browseButton: {
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.teal,
+    borderRadius: radii.control,
     gap: spacing.sm,
+    backgroundColor: colors.surface,
+  },
+  browseButtonText: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 14,
+    color: colors.teal,
+  },
+  selectedCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.primary,
+    borderRadius: radii.sheet,
+    padding: spacing.lg,
+  },
+  selectedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  selectedIconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.control,
+    backgroundColor: colors.magentaTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  selectedFileName: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 15,
+    color: colors.textPrimary,
+  },
+  selectedMeta: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.teal,
+  },
+  changeButton: {
+    minHeight: touchTarget,
+    paddingHorizontal: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  changeButtonText: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 14,
+    color: colors.primary,
+  },
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.magentaTint,
+    borderWidth: 1,
+    borderColor: colors.magenta,
+    borderRadius: radii.card,
+    padding: spacing.md,
+  },
+  errorText: {
+    flex: 1,
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.magenta,
+    lineHeight: 18,
+  },
+  actionSection: {
+    paddingTop: spacing.md,
+  },
+  primaryButton: {
+    minHeight: touchTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: radii.control,
     paddingHorizontal: spacing.xl,
+    gap: spacing.sm,
   },
   primaryButtonDisabled: {
-    opacity: 0.5,
+    backgroundColor: colors.border,
   },
   primaryButtonText: {
-    fontFamily: fonts.uiSemiBold,
+    fontFamily: fonts.bodyBold,
     fontSize: 16,
     color: colors.surface,
+  },
+  primaryButtonTextDisabled: {
+    color: colors.borderStrong,
   },
 });

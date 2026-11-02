@@ -6,7 +6,7 @@ import Icon from 'react-native-remix-icon';
 import { AppPressable } from '../../ui/AppPressable';
 import { colors, fonts, radii, spacing, touchTarget } from '../../ui/theme';
 
-export default function IntroOneScreen() {
+export default function Intro1Screen() {
   const handleNext = () => {
     router.push('/onboarding/intro-2');
   };
@@ -14,27 +14,30 @@ export default function IntroOneScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.illustrationSection}>
-          <View style={styles.illustrationCard}>
-            <View style={styles.iconCircle}>
-              <Icon color={colors.primary} name="translate-2" size={48} />
-            </View>
+        <View style={styles.header}>
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepBadgeText}>Langkah 1 dari 2</Text>
           </View>
         </View>
 
-        <View style={styles.textSection}>
+        <View style={styles.centerSection}>
+          <View style={styles.iconContainer}>
+            <Icon color={colors.primary} name="chat-smile-2-fill" size={48} />
+          </View>
+
           <Text accessibilityRole="header" style={styles.title}>
-            Mengenal Budaya Lewat Bahasa
+            Belajar Bahasa Daerah dengan Rasa &amp; Kesantunan
           </Text>
+
           <Text style={styles.description}>
-            Jelajahi keragaman bahasa daerah Nusantara langsung dari genggamanmu secara mudah,
-            menyenangkan, dan berakar pada budaya lokal.
+            Bahasa daerah adalah soal rasa, bahasa yang kamu ucapkan dengan warga lokal adalah kunci
+            menciptakan hubungan yang harmonis
           </Text>
         </View>
 
         <View style={styles.actionSection}>
           <AppPressable
-            accessibilityLabel="Lanjut ke pengenalan berikutnya"
+            accessibilityLabel="Lanjut ke halaman pengenalan kedua"
             accessibilityRole="button"
             onPress={handleNext}
           >
@@ -60,37 +63,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.lg,
   },
-  illustrationSection: {
+  header: {
+    alignItems: 'flex-start',
+    paddingTop: spacing.sm,
+  },
+  stepBadge: {
+    backgroundColor: colors.navyTint,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.control,
+  },
+  stepBadgeText: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 12,
+    color: colors.navy,
+  },
+  centerSection: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    gap: spacing.lg,
   },
-  illustrationCard: {
-    width: 220,
-    height: 220,
-    borderRadius: radii.sheet * 2,
-    backgroundColor: colors.navyTint,
+  iconContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: radii.card,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  iconCircle: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.navy,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
-  },
-  textSection: {
-    gap: spacing.md,
-    paddingBottom: spacing.xl,
+    marginBottom: spacing.xs,
   },
   title: {
     fontFamily: fonts.display,
@@ -105,20 +107,20 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   actionSection: {
-    paddingBottom: spacing.sm,
+    paddingTop: spacing.md,
   },
   primaryButton: {
     minHeight: touchTarget,
-    backgroundColor: colors.primary,
-    borderRadius: radii.control,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
+    backgroundColor: colors.primary,
+    borderRadius: radii.control,
     paddingHorizontal: spacing.xl,
+    gap: spacing.sm,
   },
   primaryButtonText: {
-    fontFamily: fonts.uiSemiBold,
+    fontFamily: fonts.bodyBold,
     fontSize: 16,
     color: colors.surface,
   },

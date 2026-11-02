@@ -11,6 +11,14 @@ export const bundledPublicKeys: PackagePublicKey[] = [
       35, 23, 221, 174, 164, 194, 89, 201, 35, 234, 108, 54, 190, 66, 170, 74,
     ]),
   },
+  {
+    keyId: 'clata-dev-key',
+    state: 'active',
+    publicKey: Uint8Array.from([
+      94, 134, 218, 160, 159, 146, 215, 98, 243, 69, 216, 167, 60, 226, 112, 246,
+      15, 179, 194, 98, 210, 252, 31, 116, 133, 240, 165, 168, 75, 122, 35, 192,
+    ]),
+  },
 ];
 
 export function findPublicKey(

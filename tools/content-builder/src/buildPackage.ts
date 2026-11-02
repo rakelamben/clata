@@ -37,6 +37,7 @@ export async function buildPackage({ sourceDir, outputFile, privateKeyPem, keyId
   const manifest = { ...sourceManifest, files, keyId, signatureReference: 'tanda-tangan' } as unknown as { packageVersion: string; files: typeof files; [key: string]: unknown };
   const signature = sign(null, canonicalBytes({ manifest, files }), createPrivateKey(privateKeyPem)).toString('base64url');
 
+  await mkdir(path.dirname(outputFile), { recursive: true });
   const staging = `${outputFile}.staging`;
   await rm(staging, { recursive: true, force: true });
   await mkdir(staging, { recursive: true });

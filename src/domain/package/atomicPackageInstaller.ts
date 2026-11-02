@@ -99,10 +99,26 @@ export class InMemoryPackageStorageAdapter implements PackageStorageAdapter {
   }
 }
 
+export type InstallProgressStep =
+  | 'READING_ARCHIVE'
+  | 'EXTRACTING_FILES'
+  | 'VERIFYING_CHECKSUMS'
+  | 'VERIFYING_SIGNATURE'
+  | 'VALIDATING_CONTENT'
+  | 'SAVING_STORAGE'
+  | 'COMPLETED';
+
+export type InstallProgressCallback = (
+  step: InstallProgressStep,
+  percent: number,
+  statusText: string,
+) => void;
+
 export interface InstallPackageOptions {
   storage?: PackageStorageAdapter;
   customKeys?: PackagePublicKey[];
   publicRelease?: boolean;
+  onProgress?: InstallProgressCallback;
 }
 
 export async function installPackageFromBuffer(
@@ -110,8 +126,20 @@ export async function installPackageFromBuffer(
   options: InstallPackageOptions = {},
 ): Promise<PackageInstallResult & { loadedPackage?: LoadedPackage }> {
   const storage = options.storage ?? new InMemoryPackageStorageAdapter();
+  const reportProgress = (step: InstallProgressStep, percent: number, text: string) => {
+    if (options.onProgress) {
+      try {
+        options.onProgress(step, percent, text);
+      } catch {
+        // Abaikan error pada listener UI
+      }
+    }
+  };
+
+  reportProgress('READING_ARCHIVE', 10, 'Membuka berkas arsip .clata...');
 
   // 1. Ekstraksi arsip dan verifikasi checksum per berkas & batas keamanan
+  reportProgress('EXTRACTING_FILES', 30, 'Mengekstrak aset audio & kosakata daerah...');
   const extractResult = extractAndValidateArchive(archiveBuffer);
   if (!extractResult.ok) {
     return {
@@ -122,8 +150,10 @@ export async function installPackageFromBuffer(
   }
 
   const { manifest, signatureContainer, files, fileEntries } = extractResult.extracted;
+  reportProgress('VERIFYING_CHECKSUMS', 55, 'Memverifikasi hash SHA-256 per berkas...');
 
   // 2. Verifikasi tanda tangan digital Ed25519 kanonikal JCS
+  reportProgress('VERIFYING_SIGNATURE', 75, 'Memverifikasi tanda tangan digital Ed25519...');
   const sigVerify = await verifyPackageSignature({
     manifest,
     files: manifest.files,
@@ -142,6 +172,7 @@ export async function installPackageFromBuffer(
   }
 
   // 3. Dekode file JSON konten untuk validasi data & aturan bisnis
+  reportProgress('VALIDATING_CONTENT', 90, 'Memvalidasi kalimat kanonikal & skenario dialog...');
   const readJson = (name: string): unknown[] => {
     const data = files.get(name);
     if (!data) throw new Error(`Berkas konten wajib "${name}" tidak ditemukan`);
@@ -192,10 +223,12 @@ export async function installPackageFromBuffer(
 
   // 5. Pemasangan Atomik: Stage -> Simpan Salinan Berkas .clata -> Aktifkan
   const packageId = manifest.packageId;
+  reportProgress('SAVING_STORAGE', 95, 'Menyimpan paket ke basis data lokal perangkat...');
   try {
     await storage.stage(packageId, archiveBuffer, files);
     await storage.activate(packageId);
 
+    reportProgress('COMPLETED', 100, 'Pemasangan paket selesai!');
     const record = await storage.getInstalledRecord(packageId);
     return {
       ok: true,

@@ -1,1 +1,66 @@
-{"packageId":"jawa-mataraman","languageId":"jv","dialectId":"mataraman","packageVersion":"2.0.0","schemaVersion":2,"minimumAppVersion":"1.0.0","registerMapping":{"akrab":"ngoko","sopan":"krama (termasuk krama inggil)","netral":"tanpa pasangan bentuk"},"orthographyReference":"fixture-poc","createdAt":"2026-11-01T10:45:00.000Z","itemCounts":{"units":1,"words":30,"sentences":12,"dialogues":6,"challenges":5},"files":[{"path":"audio/dialog-start.opus","sizeBytes":4,"sha256":"adc96e398532548b5faf8323dbdec7a55d2a04e24661a89ff202eb4add16cd80"},{"path":"audio/kalimat-sugeng.opus","sizeBytes":4,"sha256":"adc96e398532548b5faf8323dbdec7a55d2a04e24661a89ff202eb4add16cd80"},{"path":"audio/kata-sugeng.opus","sizeBytes":4,"sha256":"adc96e398532548b5faf8323dbdec7a55d2a04e24661a89ff202eb4add16cd80"},{"path":"challenge.json","sizeBytes":6059,"sha256":"d14e75cc392a618f748d71025a585fb8f86522d40e9e26334f1442d8b25b0d0f"},{"path":"dialog.json","sizeBytes":22887,"sha256":"decf278201c2d6e3cdd7210e831e7e397a83c7aa5ab792106f21298a267ee912"},{"path":"kalimat.json","sizeBytes":4031,"sha256":"d41e1198d36b2e30c121639d15217e3afb2e160ece799e5410e1c768fb1c0733"},{"path":"kata.json","sizeBytes":8961,"sha256":"215bb59706e3b0d7fecc8400f35ece8e2cc8eb8f4c4de79abed16c48487afdfd"},{"path":"unit.json","sizeBytes":55,"sha256":"19c528e59e8f4916334bbcf2f002cfa9c8e7b6c507d1f3ea91cbb68c42821146"}],"keyId":"clata-poc-2026-v2","signatureReference":"tanda-tangan"}
+{
+    "packageId": "jawa-mataraman",
+    "languageId": "jv",
+    "dialectId": "mataraman",
+    "packageVersion": "2.0.0",
+    "schemaVersion": 2,
+    "minimumAppVersion": "1.0.0",
+    "registerMapping": {
+        "akrab": "ngoko",
+        "sopan": "krama (termasuk krama inggil)",
+        "netral": "tanpa pasangan bentuk"
+    },
+    "orthographyReference": "fixture-poc",
+    "createdAt": "2026-11-01T10:45:00.000Z",
+    "itemCounts": {
+        "units": 1,
+        "words": 30,
+        "sentences": 12,
+        "dialogues": 6,
+        "challenges": 5
+    },
+    "files": [
+        {
+            "path": "audio/dialog-start.opus",
+            "sizeBytes": 8387,
+            "sha256": "b7ed601d9f8e6a548a19ba63f44b9fad55afe7671cf3ccb97220682e75cd824a"
+        },
+        {
+            "path": "audio/kalimat-sugeng.opus",
+            "sizeBytes": 14490,
+            "sha256": "295d4efb791b0436baa89e579b2964494794a8f9af8f3ca62ebd33cc4111c948"
+        },
+        {
+            "path": "audio/kata-sugeng.opus",
+            "sizeBytes": 11561,
+            "sha256": "41d7d9175ad577563afaafcbbd12dcc95981a6145acb366d215fe7530c828dc3"
+        },
+        {
+            "path": "challenge.json",
+            "sizeBytes": 6059,
+            "sha256": "d14e75cc392a618f748d71025a585fb8f86522d40e9e26334f1442d8b25b0d0f"
+        },
+        {
+            "path": "dialog.json",
+            "sizeBytes": 22887,
+            "sha256": "decf278201c2d6e3cdd7210e831e7e397a83c7aa5ab792106f21298a267ee912"
+        },
+        {
+            "path": "kalimat.json",
+            "sizeBytes": 4031,
+            "sha256": "d41e1198d36b2e30c121639d15217e3afb2e160ece799e5410e1c768fb1c0733"
+        },
+        {
+            "path": "kata.json",
+            "sizeBytes": 8961,
+            "sha256": "215bb59706e3b0d7fecc8400f35ece8e2cc8eb8f4c4de79abed16c48487afdfd"
+        },
+        {
+            "path": "unit.json",
+            "sizeBytes": 55,
+            "sha256": "19c528e59e8f4916334bbcf2f002cfa9c8e7b6c507d1f3ea91cbb68c42821146"
+        }
+    ],
+    "keyId": "clata-poc-2026-v2",
+    "signatureReference": "tanda-tangan"
+}

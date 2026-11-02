@@ -4,21 +4,21 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/gloock": "^0.4.2",
-    "@expo-google-fonts/lexend": "^0.4.1",
     "@expo-google-fonts/public-sans": "^0.4.2",
     "@noble/ed25519": "^3.2.0",
     "@noble/hashes": "^2.4.0",
     "base64-js": "^1.5.1",
     "canonicalize": "^5.1.0",
-    "expo": "~58.0.21",
+    "expo": "~58.0.22",
     "expo-asset": "~58.0.19",
-    "expo-audio": "~58.0.10",
+    "expo-audio": "~58.0.11",
     "expo-constants": "~58.0.14",
     "expo-crypto": "~58.0.7",
+    "expo-document-picker": "^58.0.4",
     "expo-font": "~58.0.11",
     "expo-linking": "~58.0.15",
-    "expo-router": "~58.0.28",
-    "expo-sqlite": "~58.0.14",
+    "expo-router": "~58.0.29",
+    "expo-sqlite": "~58.0.15",
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.7",
     "fflate": "^0.8.3",
@@ -32,6 +32,7 @@
     "react-native-web": "^0.21.4"
   },
   "devDependencies": {
+    "@audio/encode-opus": "^1.3.2",
     "@types/archiver": "^8.0.0",
     "@types/node": "^26.6.6",
     "@types/react": "~19.3.0",
@@ -53,7 +54,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "content:build": "tsx tools/content-builder/src/cli.ts",
-    "content:validate": "tsx tools/content-builder/src/validateCli.ts"
+    "content:build:dev": "tsx tools/content-builder/src/cli.ts --dev",
+    "content:validate": "tsx tools/content-builder/src/validateCli.ts",
+    "package:simulate": "tsx tools/content-builder/src/simulateImportCli.ts"
   },
   "private": true
 }

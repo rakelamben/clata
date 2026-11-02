@@ -1,24 +1,27 @@
 import { useState } from 'react';
-import RemixIcon from 'react-native-remix-icon';
-import { Animated, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
+import Icon from 'react-native-remix-icon';
 
-import type { AudioPort } from '../../../infrastructure/audio/AudioPort';
-import type { AudioPlaybackState } from '../../../infrastructure/audio/audioTypes';
-import type { VocabularyWord } from '../domain/vocabularyTypes';
-import { AudioToggle } from './AudioToggle';
+import type { WordItem } from '../../../domain/package/packageTypes';
+import type { Register } from '../../../domain/Register';
 import { AppPressable } from '../../../ui/AppPressable';
-import { colors, fonts, spacing, touchTarget } from '../../../ui/theme';
+import { RegisterBadge } from '../../../ui/RegisterBadge';
+import { colors, fonts, radii, spacing } from '../../../ui/theme';
+import { playAudioSafe, type AudioPlayStatus } from '../audio/audioPlayback';
 
-type Props = {
-  word: VocabularyWord;
+interface WordFeedItemProps {
+  word: WordItem;
   slideHeight: number;
   animatedStyle?: StyleProp<Animated.WithAnimatedValue<ViewStyle>>;
-  audio: AudioPort;
-  audioUri: string | number | null;
-  audioState: AudioPlaybackState;
-  onAudioStateChange: (state: AudioPlaybackState) => void;
-  onOpenTooltip?: (word: VocabularyWord) => void;
-};
+  onOpenRegister: (register: Register) => void;
+}
 
 function formatPartOfSpeech(pos?: string): string {
   if (!pos) return '';
@@ -42,75 +45,82 @@ export function WordFeedItem({
   word,
   slideHeight,
   animatedStyle,
-  audio,
-  audioUri,
-  audioState,
-  onAudioStateChange,
-  onOpenTooltip,
-}: Props) {
-  const [showAudioNote, setShowAudioNote] = useState(false);
-  const state = audio.getActiveItemId() === word.id && audioState !== 'idle' ? audioState : 'stopped';
-  const posText = formatPartOfSpeech(word.partOfSpeech);
+  onOpenRegister,
+}: WordFeedItemProps) {
+  const [audioStatus, setAudioStatus] = useState<AudioPlayStatus>('idle');
+  const posText = formatPartOfSpeech(word.part_of_speech);
+
+  const handlePlayAudio = async () => {
+    await playAudioSafe(word.audio, setAudioStatus);
+  };
 
   return (
-    <View
-      accessible
-      accessibilityRole="text"
-      accessibilityLabel={`Kata, ${word.lemma}. ${word.meaning}.`}
-      style={[styles.slideContainer, { height: slideHeight }]}
-    >
+    <View style={[styles.slideContainer, { height: slideHeight }]}>
       <Animated.View style={[styles.content, animatedStyle]}>
-        {/* Lemma - Kata Utama (Tanpa Card) */}
+        {/* 1. Lemma Utama (Gloock 48sp, Cardless) */}
         <View style={styles.lemmaContainer}>
-          <Text style={styles.lemma} maxFontSizeMultiplier={1.4}>
-            {word.lemma}
+          <Text accessibilityRole="header" style={styles.lemmaText}>
+            {word.text}
           </Text>
         </View>
 
-        {/* Pronunciation & Audio Toggle Pill */}
-        <View style={styles.pronunciationRow}>
-          <View style={styles.pronunciationPill}>
-            {word.level ? <Text style={styles.pronunciationText}>{word.level}</Text> : null}
-            <AudioToggle
-              wordId={word.id}
-              wordLabel={word.lemma}
-              reference={word.audio}
-              uri={audioUri}
-              audio={audio}
-              state={state}
-              onStateChange={onAudioStateChange}
-              onUnavailable={() => {
-                setShowAudioNote(true);
-                setTimeout(() => setShowAudioNote(false), 2400);
-              }}
+        {/* 2. Audio Pill (Pelafalan Penutur Asli) */}
+        <View style={styles.audioRow}>
+          <AppPressable
+            accessibilityLabel={`Putar suara pelafalan kata ${word.text}`}
+            accessibilityRole="button"
+            onPress={() => void handlePlayAudio()}
+            style={styles.audioPill}
+          >
+            <Icon
+              color={audioStatus === 'playing' ? colors.primary : colors.navy}
+              name={audioStatus === 'playing' ? 'volume-up-fill' : 'volume-up-line'}
+              size={18}
             />
-          </View>
+            <Text
+              style={[
+                styles.audioPillText,
+                audioStatus === 'playing' && styles.audioPillTextActive,
+                audioStatus === 'unavailable' && styles.audioPillTextMuted,
+              ]}
+            >
+              {audioStatus === 'loading'
+                ? 'Memuat...'
+                : audioStatus === 'playing'
+                  ? 'Memutar...'
+                  : audioStatus === 'unavailable'
+                    ? 'Audio belum tersedia'
+                    : 'Pelafalan'}
+            </Text>
+          </AppPressable>
         </View>
 
-        {/* Meaning & Word Class */}
+        {/* 3. Arti & Kelas Kata */}
         <View style={styles.meaningContainer}>
-          <Text style={styles.meaningText} maxFontSizeMultiplier={1.5}>
+          <Text style={styles.meaningText}>
             {posText ? <Text style={styles.partOfSpeech}>({posText}) </Text> : null}
             {word.meaning}
           </Text>
         </View>
 
-        {/* Action Row - Register Info Icon */}
-        <View style={styles.actionRow}>
+        {/* 4. Badge Tingkat Tutur + Tombol Info (ℹ️) */}
+        <View style={styles.registerRow}>
+          <RegisterBadge register={word.register} showExplanation={false} />
+
           <AppPressable
+            accessibilityLabel={`Pelajari tingkat tutur ${word.register}`}
             accessibilityRole="button"
-            accessibilityLabel={`Tingkat tutur: ${word.registerLabel ?? word.register}. Buka rincian.`}
-            onPress={() => onOpenTooltip?.(word)}
-            ringRadius={touchTarget / 2}
-            style={({ pressed }) => [styles.infoButton, pressed && styles.infoButtonPressed]}
+            onPress={() => onOpenRegister(word.register)}
+            style={styles.infoButton}
           >
-            <RemixIcon name="information-line" size={24} color={colors.navy} accessible={false} />
+            <Icon color={colors.navy} name="information-line" size={18} />
           </AppPressable>
         </View>
 
-        {showAudioNote ? (
-          <View style={styles.audioNoteContainer} accessibilityRole="alert">
-            <Text style={styles.audioNoteText}>Audio belum tersedia.</Text>
+        {/* 5. Catatan Konteks (Opsional) */}
+        {word.catatan ? (
+          <View style={styles.catatanBox}>
+            <Text style={styles.catatanText}>{word.catatan}</Text>
           </View>
         ) : null}
       </Animated.View>
@@ -123,20 +133,19 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.xl,
   },
   content: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.xl,
+    gap: spacing.lg,
   },
   lemmaContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.sm,
   },
-  lemma: {
+  lemmaText: {
     fontFamily: fonts.display,
     fontSize: 48,
     lineHeight: 56,
@@ -144,35 +153,43 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: -0.5,
   },
-  pronunciationRow: {
+  audioRow: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pronunciationPill: {
+  audioPill: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.navyTint,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    gap: spacing.xs + 2,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs + 4,
     borderRadius: 24,
   },
-  pronunciationText: {
+  audioPillText: {
     fontFamily: fonts.bodyMedium,
-    fontSize: 16,
+    fontSize: 14,
+    color: colors.navy,
+  },
+  audioPillTextActive: {
+    color: colors.primary,
+    fontFamily: fonts.bodySemiBold,
+  },
+  audioPillTextMuted: {
     color: colors.textSecondary,
-    paddingLeft: spacing.xs,
   },
   meaningContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
   },
   meaningText: {
     fontFamily: fonts.body,
-    fontSize: 21,
-    lineHeight: 30,
+    fontSize: 20,
+    lineHeight: 28,
     color: colors.textPrimary,
     textAlign: 'center',
   },
@@ -180,35 +197,36 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bodyMedium,
     fontStyle: 'italic',
     color: colors.textSecondary,
-    fontSize: 19,
+    fontSize: 18,
   },
-  actionRow: {
+  registerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: spacing.sm,
+    gap: spacing.sm,
   },
   infoButton: {
-    width: touchTarget,
-    height: touchTarget,
-    borderRadius: touchTarget / 2,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.navyTint,
   },
-  infoButtonPressed: {
-    backgroundColor: colors.border,
-  },
-  audioNoteContainer: {
-    backgroundColor: colors.navyTint,
+  catatanBox: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radii.control,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-    borderRadius: 8,
-    marginTop: spacing.xs,
+    paddingVertical: spacing.sm,
+    maxWidth: 320,
   },
-  audioNoteText: {
-    fontFamily: fonts.ui,
+  catatanText: {
+    fontFamily: fonts.body,
     fontSize: 13,
     color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });

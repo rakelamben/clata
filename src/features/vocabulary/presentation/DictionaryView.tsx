@@ -1,112 +1,44 @@
-import { useCallback, useEffect, useRef, useState, type ComponentRef } from 'react';
-import RemixIcon from 'react-native-remix-icon';
+import { useState } from 'react';
 import {
   FlatList,
   Keyboard,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-remix-icon';
 
-import type { DependencyContainer } from '../../../bootstrap/DependencyContainer';
-import type { AudioPlaybackState } from '../../../infrastructure/audio/audioTypes';
-import type { VocabularyFilters, VocabularyWord } from '../domain/vocabularyTypes';
-import { DictionaryWordCard } from './DictionaryWordCard';
-import { DictionaryLoadingList } from './VocabularyStates';
+import type { WordItem } from '../../../domain/package/packageTypes';
 import { AppPressable } from '../../../ui/AppPressable';
 import { colors, fonts, radii, spacing, touchTarget } from '../../../ui/theme';
+import { DictionaryWordCard } from './DictionaryWordCard';
 
-type Props = {
-  packageId?: string | null;
+interface DictionaryViewProps {
+  words: WordItem[];
   onClose: () => void;
-  container: DependencyContainer;
-  audioState: AudioPlaybackState;
-  onAudioStateChange: (state: AudioPlaybackState) => void;
-};
+}
 
-export function DictionaryView({
-  packageId,
-  onClose,
-  container,
-  audioState,
-  onAudioStateChange,
-}: Props) {
-  const insets = useSafeAreaInsets();
-  const [words, setWords] = useState<VocabularyWord[]>([]);
-  const [filters, setFilters] = useState<VocabularyFilters>({ themes: [], registers: [] });
+const FILTER_OPTIONS = ['Semua', 'Sopan', 'Akrab', 'Netral'];
+
+export function DictionaryView({ words, onClose }: DictionaryViewProps) {
   const [query, setQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<string>('Semua');
-  const [loading, setLoading] = useState(true);
-  const [loadFailed, setLoadFailed] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('Semua');
 
-  const listRef = useRef<FlatList<VocabularyWord>>(null);
-  const searchInputRef = useRef<ComponentRef<typeof TextInput>>(null);
-
-  // Load package filters & all words
-  const loadData = useCallback(async () => {
-    if (!packageId) {
-      setWords([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setLoadFailed(false);
-
-    try {
-      // Load all words for the package
-      const pageResult = await container.vocabulary.search({
-        packageId,
-        limit: 250,
-        source: 'dictionary',
-      });
-
-      if (pageResult.ok) {
-        setWords(pageResult.data.items);
-      } else {
-        setLoadFailed(true);
-      }
-
-      const filtersResult = await container.vocabulary.getFilters(packageId);
-      if (filtersResult.ok) {
-        setFilters(filtersResult.data);
-      }
-    } catch {
-      setLoadFailed(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [container.vocabulary, packageId]);
-
-  useEffect(() => {
-    void Promise.resolve().then(() => loadData());
-  }, [loadData]);
-
-  // Reset scroll position on filter/search change
-  const resetListPosition = () => {
-    listRef.current?.scrollToOffset({ offset: 0, animated: false });
-  };
-
-  // Filter options list: 'Semua', followed by available registers or themes
-  const filterOptions = ['Semua', ...filters.registers];
-
-  // Client-side filtering matching search query & register filter
   const normalizedQuery = query.trim().toLowerCase();
-  const visibleWords = words.filter((word) => {
+
+  const filteredWords = words.filter((word) => {
     const matchesFilter =
       selectedFilter === 'Semua' ||
-      word.register.toLowerCase() === selectedFilter.toLowerCase() ||
-      word.registerLabel?.toLowerCase() === selectedFilter.toLowerCase();
+      word.register.toLowerCase() === selectedFilter.toLowerCase();
 
     if (!matchesFilter) return false;
     if (!normalizedQuery) return true;
 
     return (
-      word.lemma.toLowerCase().includes(normalizedQuery) ||
+      word.text.toLowerCase().includes(normalizedQuery) ||
       word.meaning.toLowerCase().includes(normalizedQuery) ||
-      (word.partOfSpeech && word.partOfSpeech.toLowerCase().includes(normalizedQuery))
+      word.part_of_speech.toLowerCase().includes(normalizedQuery)
     );
   });
 
@@ -116,160 +48,90 @@ export function DictionaryView({
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: Math.max(insets.top, spacing.lg), paddingBottom: insets.bottom },
-      ]}
-    >
+    <View style={styles.container}>
       {/* 1. Header Kamus */}
       <View style={styles.header}>
         <AppPressable
+          accessibilityLabel="Kembali ke Feed Kata"
           accessibilityRole="button"
-          accessibilityLabel="Kembali ke Kata"
           onPress={handleClose}
-          ringRadius={touchTarget / 2}
           style={styles.backButton}
         >
-          <RemixIcon name="arrow-left-line" size={24} color={colors.navy} accessible={false} />
+          <Icon color={colors.navy} name="arrow-left-line" size={24} />
         </AppPressable>
-        <Text style={styles.headerTitle}>Kamus</Text>
+
+        <Text style={styles.headerTitle}>Kamus Kosakata</Text>
         <View style={styles.headerSpacer} />
       </View>
 
-      {/* 2. Controls: Search Bar & Horizontal Filters */}
+      {/* 2. Search Bar & Horizontal Filter Chips */}
       <View style={styles.controls}>
-        <View style={styles.searchContainer}>
-          <RemixIcon name="search-line" size={20} color={colors.textSecondary} accessible={false} />
+        <View style={styles.searchBar}>
+          <Icon color={colors.textSecondary} name="search-line" size={18} />
           <TextInput
-            ref={searchInputRef}
-            accessibilityLabel="Cari kata atau arti"
-            placeholder="Cari kata atau arti…"
-            placeholderTextColor={colors.borderStrong}
-            value={query}
-            onChangeText={(text) => {
-              setQuery(text);
-              resetListPosition();
-            }}
+            accessibilityLabel="Cari kosakata daerah atau terjemahan"
+            onChangeText={setQuery}
+            placeholder="Cari kata atau arti..."
+            placeholderTextColor={colors.textSecondary}
             style={styles.searchInput}
+            value={query}
           />
-          {query.length > 0 ? (
+          {query ? (
             <AppPressable
+              accessibilityLabel="Bersihkan pencarian"
               accessibilityRole="button"
-              accessibilityLabel="Hapus pencarian"
-              onPress={() => {
-                setQuery('');
-                resetListPosition();
-                searchInputRef.current?.focus();
-              }}
-              ringRadius={16}
+              onPress={() => setQuery('')}
               style={styles.clearButton}
             >
-              <RemixIcon name="close-line" size={18} color={colors.borderStrong} accessible={false} />
+              <Icon color={colors.textSecondary} name="close-circle-fill" size={16} />
             </AppPressable>
           ) : null}
         </View>
 
-        {/* Filter Chips Bar */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersContainer}
-          accessibilityLabel="Filter kata"
-        >
-          {filterOptions.map((item) => {
-            const isSelected = selectedFilter === item;
+        <View style={styles.filterRow}>
+          {FILTER_OPTIONS.map((opt) => {
+            const isSelected = selectedFilter === opt;
             return (
               <AppPressable
-                key={item}
+                accessibilityLabel={`Filter ${opt}`}
                 accessibilityRole="button"
-                accessibilityState={{ selected: isSelected }}
-                accessibilityLabel={`Filter ${item}`}
-                onPress={() => {
-                  setSelectedFilter(item);
-                  resetListPosition();
-                }}
-                ringRadius={radii.control}
-                style={[styles.filterChip, isSelected && styles.filterChipSelected]}
+                key={opt}
+                onPress={() => setSelectedFilter(opt)}
+                style={[
+                  styles.filterChip,
+                  isSelected && styles.filterChipSelected,
+                ]}
               >
-                {isSelected ? (
-                  <RemixIcon name="check-line" size={16} color={colors.surface} accessible={false} />
-                ) : null}
-                <Text style={[styles.filterChipText, isSelected && styles.filterChipTextSelected]}>
-                  {item}
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    isSelected && styles.filterChipTextSelected,
+                  ]}
+                >
+                  {opt}
                 </Text>
               </AppPressable>
             );
           })}
-        </ScrollView>
+        </View>
       </View>
 
-      {/* 3. Word List Region */}
-      <View style={styles.listRegion}>
-        {loading ? (
-          <DictionaryLoadingList />
-        ) : loadFailed ? (
-          <View style={styles.emptyState}>
-            <View style={[styles.emptyIconCircle, styles.emptyIconError]}>
-              <RemixIcon name="book-open-line" size={32} color={colors.primary} accessible={false} />
-            </View>
-            <Text style={styles.emptyTitle}>Kamus belum dapat dibuka.</Text>
-            <Text style={styles.emptyDescription}>
-              Materi lokal belum siap. Silakan buka kembali Kamus sebentar lagi.
-            </Text>
-            <AppPressable
-              accessibilityRole="button"
-              accessibilityLabel="Coba lagi"
-              onPress={() => void loadData()}
-              ringRadius={radii.control}
-              style={styles.retryButton}
-            >
-              <RemixIcon name="refresh-line" size={18} color={colors.surface} accessible={false} />
-              <Text style={styles.retryButtonText}>Coba lagi</Text>
-            </AppPressable>
-          </View>
-        ) : visibleWords.length === 0 ? (
-          <View style={styles.emptyState}>
-            <View style={styles.emptyIconCircle}>
-              <RemixIcon name="search-line" size={32} color={colors.textSecondary} accessible={false} />
-            </View>
-            <Text style={styles.emptyTitle}>
-              {words.length > 0 ? 'Kata belum ditemukan.' : 'Belum ada kata di kamus.'}
-            </Text>
-            <Text style={styles.emptyDescription}>
-              {words.length > 0
-                ? 'Coba kata lain atau pilih filter yang berbeda.'
-                : 'Materi kamus akan muncul setelah paket belajar terpasang.'}
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            ref={listRef}
-            accessibilityLabel="Daftar kata kamus, dapat digulir"
-            data={visibleWords}
-            keyExtractor={(word) => word.id}
-            contentContainerStyle={styles.listContent}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <DictionaryWordCard
-                word={item}
-                audio={container.audio}
-                audioUri={
-                  item.audio
-                    ? container.audioSources.resolve(
-                        item.packageId,
-                        item.packageVersion,
-                        item.audio.path,
-                      )
-                    : null
-                }
-                audioState={audioState}
-                onAudioStateChange={onAudioStateChange}
-              />
-            )}
-          />
-        )}
-      </View>
+      {/* 3. Daftar Kartu Kamus */}
+      {filteredWords.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Icon color={colors.textSecondary} name="search-line" size={32} />
+          <Text style={styles.emptyText}>Tidak ada kata yang sesuai pencarian.</Text>
+        </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.listContent}
+          data={filteredWords}
+          keyExtractor={(item) => item.id}
+          keyboardShouldPersistTaps="handled"
+          renderItem={({ item }) => <DictionaryWordCard word={item} />}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 }
@@ -277,36 +139,36 @@ export function DictionaryView({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: spacing.lg,
     backgroundColor: colors.background,
   },
   header: {
+    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
   },
   backButton: {
     width: touchTarget,
     height: touchTarget,
-    borderRadius: touchTarget / 2,
     alignItems: 'center',
     justifyContent: 'center',
+    marginLeft: -spacing.xs,
   },
   headerTitle: {
     fontFamily: fonts.display,
-    fontSize: 26,
+    fontSize: 22,
     color: colors.navy,
   },
   headerSpacer: {
     width: touchTarget,
   },
   controls: {
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.md,
     gap: spacing.sm,
-    paddingBottom: spacing.sm,
   },
-  searchContainer: {
-    minHeight: touchTarget,
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surface,
@@ -314,32 +176,27 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.control,
     paddingHorizontal: spacing.md,
-    gap: spacing.sm,
+    height: 44,
+    gap: spacing.xs,
   },
   searchInput: {
     flex: 1,
-    height: '100%',
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: 14,
     color: colors.textPrimary,
     paddingVertical: 0,
   },
   clearButton: {
     padding: spacing.xs,
   },
-  filtersContainer: {
+  filterRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.xs,
+    gap: spacing.xs,
   },
   filterChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radii.control,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: 16,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
@@ -349,70 +206,30 @@ const styles = StyleSheet.create({
     borderColor: colors.navy,
   },
   filterChipText: {
-    fontFamily: fonts.uiMedium,
-    fontSize: 13,
+    fontFamily: fonts.bodyMedium,
+    fontSize: 12,
     color: colors.textSecondary,
   },
   filterChipTextSelected: {
     color: colors.surface,
-    fontFamily: fonts.uiSemiBold,
-  },
-  listRegion: {
-    flex: 1,
+    fontFamily: fonts.bodySemiBold,
   },
   listContent: {
-    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xxxl,
-    paddingTop: spacing.xs,
+    gap: spacing.sm,
   },
-  emptyState: {
+  emptyContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
-    gap: spacing.md,
-    paddingBottom: spacing.xxxl,
+    gap: spacing.sm,
   },
-  emptyIconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.navyTint,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.xs,
-  },
-  emptyIconError: {
-    backgroundColor: colors.magentaTint,
-  },
-  emptyTitle: {
-    fontFamily: fonts.display,
-    fontSize: 22,
-    color: colors.navy,
-    textAlign: 'center',
-  },
-  emptyDescription: {
+  emptyText: {
     fontFamily: fonts.body,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
     color: colors.textSecondary,
     textAlign: 'center',
-    maxWidth: 280,
-  },
-  retryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.primary,
-    borderRadius: radii.control,
-    minHeight: touchTarget,
-    paddingHorizontal: spacing.xl,
-    marginTop: spacing.sm,
-  },
-  retryButtonText: {
-    fontFamily: fonts.uiSemiBold,
-    fontSize: 15,
-    color: colors.surface,
   },
 });

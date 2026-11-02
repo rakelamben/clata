@@ -1,1 +1,175 @@
-[{"id":"kalimat-01","text":"sugeng ___","translation":"Contoh selamat.","word_ids":["kata-sugeng"],"gap":"kata-sugeng","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-02","text":"enjing ___","translation":"Contoh pagi.","word_ids":["kata-enjing"],"gap":"kata-enjing","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-03","text":"awan ___","translation":"Contoh langit.","word_ids":["kata-awan"],"gap":"kata-awan","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-04","text":"mangan ___","translation":"Contoh makan.","word_ids":["kata-mangan"],"gap":"kata-mangan","register":"familiar","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-05","text":"turu ___","translation":"Contoh tidur.","word_ids":["kata-turu"],"gap":"kata-turu","register":"familiar","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-06","text":"sugeng ___","translation":"Contoh selamat.","word_ids":["kata-sugeng"],"gap":"kata-sugeng","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-07","text":"enjing ___","translation":"Contoh pagi.","word_ids":["kata-enjing"],"gap":"kata-enjing","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-08","text":"awan ___","translation":"Contoh langit.","word_ids":["kata-awan"],"gap":"kata-awan","register":"neutral","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-09","text":"mangan ___","translation":"Contoh makan.","word_ids":["kata-mangan"],"gap":"kata-mangan","register":"familiar","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"},{"id":"kalimat-10","text":"turu ___","translation":"Contoh tidur.","word_ids":["kata-turu"],"gap":"kata-turu","register":"familiar","unit_id":"unit-1","level":"L1","audio":"audio/kalimat-sugeng.opus","status":"poc"}]
+[
+  {
+    "id": "kalimat-01",
+    "text": "sugeng enjing",
+    "translation": "Selamat pagi.",
+    "word_ids": [
+      "kata-sugeng",
+      "kata-enjing"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-enjing"
+  },
+  {
+    "id": "kalimat-02",
+    "text": "kula badhe nedha sekul",
+    "translation": "Saya hendak makan nasi.",
+    "word_ids": [
+      "kata-nedha",
+      "kata-sekul"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-nedha"
+  },
+  {
+    "id": "kalimat-03",
+    "text": "bapak nembe sare wonten kamar",
+    "translation": "Bapak sedang tidur di kamar.",
+    "word_ids": [
+      "kata-bapak",
+      "kata-sare",
+      "kata-kamar"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-sare"
+  },
+  {
+    "id": "kalimat-04",
+    "text": "ibu tindak dhateng peken",
+    "translation": "Ibu pergi ke pasar.",
+    "word_ids": [
+      "kata-ibu",
+      "kata-tindak",
+      "kata-peken"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-peken"
+  },
+  {
+    "id": "kalimat-05",
+    "text": "adhik nembe sinau maca",
+    "translation": "Adik sedang belajar membaca.",
+    "word_ids": [
+      "kata-adhik",
+      "kata-sinau",
+      "kata-maca"
+    ],
+    "register": "akrab",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-maca"
+  },
+  {
+    "id": "kalimat-06",
+    "text": "sugeng awan sedaya",
+    "translation": "Selamat siang semuanya.",
+    "word_ids": [
+      "kata-sugeng",
+      "kata-awan"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-awan"
+  },
+  {
+    "id": "kalimat-07",
+    "text": "sugeng sonten bapak ibu",
+    "translation": "Selamat sore bapak ibu.",
+    "word_ids": [
+      "kata-sugeng",
+      "kata-sonten",
+      "kata-bapak",
+      "kata-ibu"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-sonten"
+  },
+  {
+    "id": "kalimat-08",
+    "text": "sugeng dalu sedherek",
+    "translation": "Selamat malam saudara.",
+    "word_ids": [
+      "kata-sugeng",
+      "kata-dalu"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-dalu"
+  },
+  {
+    "id": "kalimat-09",
+    "text": "ayo mangan bareng ing omah",
+    "translation": "Ayo makan bersama di rumah.",
+    "word_ids": [
+      "kata-mangan",
+      "kata-omah"
+    ],
+    "register": "akrab",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-mangan"
+  },
+  {
+    "id": "kalimat-10",
+    "text": "adhiku wis turu awan",
+    "translation": "Adikku sudah tidur siang.",
+    "word_ids": [
+      "kata-turu",
+      "kata-awan",
+      "kata-adhik"
+    ],
+    "register": "akrab",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-turu"
+  },
+  {
+    "id": "kalimat-11",
+    "text": "kula nyuwun ngunjuk toya",
+    "translation": "Saya minta minum air.",
+    "word_ids": [
+      "kata-toya"
+    ],
+    "register": "sopan",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-toya"
+  },
+  {
+    "id": "kalimat-12",
+    "text": "adhik nyuwun ngombe banyu",
+    "translation": "Adik minta minum air.",
+    "word_ids": [
+      "kata-adhik",
+      "kata-banyu"
+    ],
+    "register": "akrab",
+    "unit_id": "unit-1",
+    "audio": "audio/kalimat-sugeng.opus",
+    "status": "poc",
+    "focus_word_id": "kata-banyu"
+  }
+]

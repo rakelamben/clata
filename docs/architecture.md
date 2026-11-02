@@ -28,24 +28,20 @@ Use case minimum: `completeOnboarding`, `installBundledPackage`, `recordWordView
 
 Setiap operasi async memiliki `idle | loading | success | error`; operasi jaringan juga memiliki `offline | retrying`. Screen MUST menyediakan loading, error, empty, offline, dan success state yang relevan.
 
-## Startup
+## Startup & Blank Slate Principle
 
-1. Load safe app metadata.
-2. Open SQLite and run migrations transactionally.
-3. Recover interrupted package installs.
-4. Rebuild invalid derived caches.
-5. Install/verify bundled package if absent.
-6. Initialize dependency container, local profile, capability state, and navigation.
+1. Aplikasi dimulai dalam kondisi kosong murni (*blank slate*) tanpa paket bawaan yang terpasang.
+2. Membuka database SQLite lokal `clata.db` dan menjalankan migrasi skema tabel dasar (`app_settings` dan `installed_packages`).
+3. Memeriksa status `onboarding_completed` dan `active_package_id` di `app_settings`:
+   - Jika onboarding selesai dan paket aktif terdaftar: langsung navigasi ke `/(tabs)/kata`.
+   - Jika belum: arahkan pengguna ke alur onboarding (`/onboarding/intro-1`).
+4. Penyimpanan paket biner asli (`.clata`) terisolasi di internal storage (`packages/installed/<packageId>/bundle.clata`) dan sepenuhnya terpisah dari database personal pengguna.
 
-Startup failure MUST show recovery action and MUST NOT silently delete local data.
+## Package Lifecycle (Schema Version 2)
 
-## Package lifecycle
+`pilih berkas lokal (.clata/.zip) → stage temporary files → safe extract (fflate) → cek kontaminasi data personal → verifikasi checksum SHA-256 → verifikasi tanda tangan Ed25519 (JCS RFC 8785) → validasi konten Schema v2 (bebas level, 3 register, kalimat utuh, dialog audio) → persist SQLite record → atomic activation`.
 
-`select source → stage temporary files → safe extract → schema validation → signature/checksum validation → semantic validation → capacity check → persist → atomic activation → rebuild indexes`.
-
-Package signatures use Ed25519 over the canonical manifest and checksum list; SHA-256 is used for file checksums. Audio targets Opus with AAC/M4A fallback after device validation.
-
-Plan 2 adds package validation, SemVer comparison, bundled source, staging/activation contracts, Ed25519 verification, safe-path checks, and a development in-memory storage adapter. Persistent SQLite package records and production archive recovery are completed with Plan 3.
+Seluruh tahapan pemasangan memancarkan event progres real-time (`READING_ARCHIVE` 10%, `EXTRACTING_FILES` 30%, `VERIFYING_CHECKSUMS` 55%, `VERIFYING_SIGNATURE` 75%, `VALIDATING_CONTENT` 90%, `SAVING_STORAGE` 95%, `COMPLETED` 100%) sehingga antarmuka pengguna dapat menampilkan progres instalasi sesungguhnya.
 
 ## Diagrams
 

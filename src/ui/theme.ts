@@ -16,6 +16,7 @@ export const colors = {
   navyTint: '#EAF0F3',
   tealTint: '#E7F2F2',
   magentaTint: '#F8E7ED',
+  orangeTint: '#F8EBE6',
 } as const;
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 40 } as const;
@@ -24,7 +25,7 @@ export const motion = { fast: 120, standard: 200, emphasis: 280, slow: 360 } as 
 
 /**
  * Local, bundled font families. These names are registered by `useFonts` in
- * AppProviders, so screens never depend on a runtime network request.
+ * RootLayout, so screens never depend on a runtime network request.
  * Use the family that carries the weight instead of `fontWeight`, because
  * Android does not synthesise weights for bundled fonts reliably.
  */
@@ -33,9 +34,11 @@ export const fonts = {
   body: 'PublicSans_400Regular',
   bodyMedium: 'PublicSans_500Medium',
   bodySemiBold: 'PublicSans_600SemiBold',
-  ui: 'Lexend_400Regular',
-  uiMedium: 'Lexend_500Medium',
-  uiSemiBold: 'Lexend_600SemiBold',
+  bodyBold: 'PublicSans_700Bold',
+  ui: 'PublicSans_400Regular',
+  uiMedium: 'PublicSans_500Medium',
+  uiSemiBold: 'PublicSans_600SemiBold',
+  uiBold: 'PublicSans_700Bold',
 } as const;
 
 /** Minimum touch target: 44 pt iOS / 48 dp Android. 48 covers both. */

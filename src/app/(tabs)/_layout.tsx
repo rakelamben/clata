@@ -1,20 +1,9 @@
-import { Redirect, Tabs } from 'expo-router';
-import RemixIcon from 'react-native-remix-icon';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Tabs } from 'expo-router';
+import Icon from 'react-native-remix-icon';
 
 import { colors, fonts } from '../../ui/theme';
-import { useAppRuntime } from '../../bootstrap/AppBootstrap';
 
-export default function TabsLayout() {
-  const { profile, startup, onboardingState } = useAppRuntime();
-  const insets = useSafeAreaInsets();
-
-  if (startup.status !== 'ready' || !startup.onboardingCompleted || onboardingState !== 'ready') {
-    return <Redirect href="/onboarding" />;
-  }
-
-  const isAdult = profile?.ageCategory === 'adult';
-
+export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -25,14 +14,10 @@ export default function TabsLayout() {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          height: 60 + Math.max(insets.bottom, 8),
-          paddingTop: 8,
-          paddingBottom: Math.max(insets.bottom, 8),
         },
         tabBarLabelStyle: {
           fontFamily: fonts.uiMedium,
           fontSize: 12,
-          marginTop: 2,
         },
       }}
     >
@@ -40,12 +25,11 @@ export default function TabsLayout() {
         name="kata"
         options={{
           title: 'Kata',
-          tabBarIcon: ({ focused }) => (
-            <RemixIcon
-              name={focused ? 'book-read-fill' : 'book-read-line'}
-              size={24}
-              color={focused ? colors.primary : colors.textSecondary}
-              accessible={false}
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              color={typeof color === 'string' ? color : colors.primary}
+              name="book-open-line"
+              size={size}
             />
           ),
         }}
@@ -54,12 +38,11 @@ export default function TabsLayout() {
         name="latihan"
         options={{
           title: 'Latihan',
-          tabBarIcon: ({ focused }) => (
-            <RemixIcon
-              name={focused ? 'sparkling-fill' : 'sparkling-line'}
-              size={24}
-              color={focused ? colors.primary : colors.textSecondary}
-              accessible={false}
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              color={typeof color === 'string' ? color : colors.primary}
+              name="pencil-line"
+              size={size}
             />
           ),
         }}
@@ -68,12 +51,11 @@ export default function TabsLayout() {
         name="tantangan"
         options={{
           title: 'Tantangan',
-          tabBarIcon: ({ focused }) => (
-            <RemixIcon
-              name={focused ? 'medal-fill' : 'medal-line'}
-              size={24}
-              color={focused ? colors.primary : colors.textSecondary}
-              accessible={false}
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              color={typeof color === 'string' ? color : colors.primary}
+              name="trophy-line"
+              size={size}
             />
           ),
         }}
@@ -82,13 +64,11 @@ export default function TabsLayout() {
         name="profil"
         options={{
           title: 'Profil',
-          href: isAdult ? undefined : null,
-          tabBarIcon: ({ focused }) => (
-            <RemixIcon
-              name={focused ? 'user-3-fill' : 'user-3-line'}
-              size={24}
-              color={focused ? colors.primary : colors.textSecondary}
-              accessible={false}
+          tabBarIcon: ({ color, size }) => (
+            <Icon
+              color={typeof color === 'string' ? color : colors.primary}
+              name="user-line"
+              size={size}
             />
           ),
         }}
@@ -96,4 +76,3 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
-

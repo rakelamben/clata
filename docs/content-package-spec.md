@@ -49,6 +49,29 @@ Signatures use Ed25519 with a `key_id`. The signed message is a UTF-8 JSON Canon
 
 IDs are unique inside a package. Dialog graphs must have no orphan nodes or dead ends. Challenge references must resolve to package items. Audio metadata must declare format, duration, channel count, and sample rate. Item status and license metadata are mandatory.
 
+## Schema Version 2 Contract (No Level, 3 Registers, Catatan, Canonical Sentences)
+
+- `schema_version`: MUST be `2`. Schema version 1 is obsolete and rejected.
+- `level`: FORBIDDEN in all package data files (`unit.json`, `kata.json`, `kalimat.json`, `dialog.json`, `challenge.json`). Learning progression is strictly determined by unit `order`.
+- `register`: MANDATORY on `kata`, `kalimat`, and `dialog`. Only three allowed values: `sopan`, `akrab`, and `netral`. See [docs/register-definition.md](register-definition.md).
+- `catatan`: Optional free-text note (string, max 120 characters) on words to describe subject usage distinction (e.g. for self vs for respected person).
+- `kalimat.json`:
+  * `text`: Wajib berupa kalimat lengkap, utuh, dan natural (canonical sentence). DILARANG memuat karakter rumpang `___`.
+  * `word_ids`: Array ID kata yang menyusun atau berkaitan dengan kalimat.
+  * `focus_word_id`: ID kata target pembelajaran (menggantikan field lama `gap`). Menandai kata utama yang dipelajari pada kalimat tersebut.
+  * `register`: Wajib (`sopan`, `akrab`, atau `netral`).
+  * `level`: Dilarang.
+
+- `dialog.json`:
+  * `choices`: Setiap objek opsi pilihan pada `nodes[*].choices[*]` wajib memiliki atribut `audio` (path berkas audio pengucapan opsi).
+  * `repair`: Jika opsi memuat blok perbaikan `repair` (pada opsi tidak-nyambung), objek `repair` wajib memiliki atribut `audio`.
+  * `endings`: Wajib multi-ending dengan minimal 2 ending:
+    1) Kualitas `"pas"` (umpan balik percakapan lancar, santun, dan sesuai konteks).
+    2) Kualitas `"kurang-pas"` (umpan balik jika percakapan selesai namun terdapat pilihan kata/register yang canggung atau kurang tepat).
+    Setiap ending wajib memiliki `id` yang jelas, `quality`, dan teks `feedback` berbahasa Indonesia.
+  * `register`: Wajib (`sopan`, `akrab`, atau `netral`).
+  * `level`: Dilarang.
+
 ## Failure behavior
 
 Invalid, lower-version, duplicate-version, corrupt, unsigned, or unsupported packages MUST be rejected with a reason code. Existing package, progress, and archive MUST remain unchanged.

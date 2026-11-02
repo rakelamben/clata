@@ -1,0 +1,4 @@
+# Ensure deterministic line endings for package hashing
+*.json text eol=lf
+*.opus binary
+*.clata binary

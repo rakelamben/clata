@@ -52,8 +52,8 @@
         },
         {
             "path": "kata.json",
-            "sizeBytes": 8961,
-            "sha256": "215bb59706e3b0d7fecc8400f35ece8e2cc8eb8f4c4de79abed16c48487afdfd"
+            "sizeBytes": 8625,
+            "sha256": "ddbc904896e3a899f6d16f0d161ad756b5bc0496cb69cc64eaef323031118456"
         },
         {
             "path": "unit.json",

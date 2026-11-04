@@ -31,7 +31,7 @@ function loadFixtureFiles(sourceDir: string): Record<string, Uint8Array> {
 }
 
 describe('Package Import Pipeline (Client-Side FR-85)', () => {
-  const fixtureDir = path.resolve('content/packages/jawa-mataraman/source');
+  const fixtureDir = path.resolve('tests/fixtures/sample-package/source');
   const fixtureFiles = loadFixtureFiles(fixtureDir);
 
   // Kunci Ed25519 deterministik khusus untuk lingkungan pengujian otomatis

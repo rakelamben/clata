@@ -15,6 +15,7 @@ expo-env.d.ts
 /dist-onboarding-check/
 /coverage/
 /build/
+/clata-content/
 *.apk
 *.aab
 *.log

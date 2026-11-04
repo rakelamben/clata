@@ -192,7 +192,11 @@ export function loadPackageData(params: {
     return {
       id: String(item.id),
       title: String(item.title),
-      interlocutor: String(item.interlocutor),
+      interlocutor: String(item.interlocutor ?? item.partner ?? 'partner'),
+      partner: item.partner ? String(item.partner) : undefined,
+      contextDescription: item.contextDescription ? String(item.contextDescription) : undefined,
+      userRole: item.userRole ? String(item.userRole) : undefined,
+      avatar: item.avatar ? String(item.avatar) : undefined,
       register: item.register,
       unit_id: item.unit_id ? String(item.unit_id) : undefined,
       audio: item.audio ? String(item.audio) : undefined,

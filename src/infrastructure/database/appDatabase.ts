@@ -95,6 +95,25 @@ export async function initializeDatabaseSchema(db: DatabaseAdapter): Promise<voi
 
     const colNames = new Set(columns.map((c) => c.name.toLowerCase()));
 
+    // Migrasi otomatis jika tabel lawas memiliki kolom usang (seperti source dari prototype v1)
+    if (colNames.has('source')) {
+      await db.exec(`
+        DROP TABLE installed_packages;
+        CREATE TABLE installed_packages (
+          package_id TEXT PRIMARY KEY,
+          language_id TEXT NOT NULL,
+          dialect_id TEXT NOT NULL,
+          package_version TEXT NOT NULL,
+          schema_version INTEGER NOT NULL,
+          title TEXT NOT NULL,
+          bundle_path TEXT NOT NULL,
+          installed_at TEXT NOT NULL,
+          is_active INTEGER NOT NULL DEFAULT 0
+        );
+      `);
+      return;
+    }
+
     // Migrasi in-place via ALTER TABLE: cepat, atomik, dan tidak mengunci tabel
     if (!colNames.has('title')) {
       await db.exec("ALTER TABLE installed_packages ADD COLUMN title TEXT NOT NULL DEFAULT '';");

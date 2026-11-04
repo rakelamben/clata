@@ -161,7 +161,7 @@ export function advanceDialogueRun(
     const isUserSpeaker = nextNode.speaker === 'user';
     const speakerLabel = isUserSpeaker
       ? 'user'
-      : ((dialogue.partner || dialogue.interlocutor || nextNode.speaker) as string);
+      : ((dialogue.partner || nextNode.speaker || dialogue.interlocutor || 'Lawan Bicara') as string);
 
     history.push({
       nodeId: nextNode.id,
@@ -335,7 +335,7 @@ export function applyChoiceToRun(
     const isUserSpeaker = nextNode.speaker === 'user';
     const speakerLabel = isUserSpeaker
       ? 'user'
-      : ((dialogue.partner || dialogue.interlocutor || nextNode.speaker) as string);
+      : ((dialogue.partner || nextNode.speaker || dialogue.interlocutor || 'Lawan Bicara') as string);
 
     history.push({
       nodeId: nextNode.id,

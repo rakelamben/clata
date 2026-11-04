@@ -159,7 +159,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         await packageRepo.savePackage({
           package_id: manifest.packageId,
           language_id: manifest.languageId,
-          dialect_id: manifest.dialectId,
+          dialect_id: manifest.dialectId || (manifest as any).dialectName || manifest.packageId,
           package_version: manifest.packageVersion,
           schema_version: manifest.schemaVersion,
           title: formattedTitle,

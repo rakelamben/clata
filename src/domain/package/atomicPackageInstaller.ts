@@ -6,7 +6,7 @@ import type {
 } from './packageTypes';
 import { extractAndValidateArchive } from './packageArchiveExtractor';
 import { verifyPackageSignature } from './signatureVerifier';
-import { validateContent } from '../../../tools/content-builder/src/validateContent';
+import { validateContent } from './contentValidator';
 
 export interface InstalledPackageRecord {
   packageId: string;

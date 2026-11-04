@@ -32,7 +32,7 @@ function loadFixtureFiles(sourceDir: string): Record<string, Uint8Array> {
 }
 
 describe('Package Import Progress Reporting', () => {
-  const fixtureDir = path.resolve('content/packages/jawa-mataraman/source');
+  const fixtureDir = path.resolve('tests/fixtures/sample-package/source');
   const fixtureFiles = loadFixtureFiles(fixtureDir);
 
   const { publicKey, privateKey } = generateKeyPairSync('ed25519');

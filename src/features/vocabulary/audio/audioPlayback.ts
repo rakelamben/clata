@@ -3,9 +3,9 @@
  * Menghindari native crash (ExoPlayer/AVPlayer) akibat invalid URI scheme.
  */
 
-import dialogStartAudio from '../../../../content/packages/jawa-mataraman/source/audio/dialog-start.opus';
-import kalimatSugengAudio from '../../../../content/packages/jawa-mataraman/source/audio/kalimat-sugeng.opus';
-import kataSugengAudio from '../../../../content/packages/jawa-mataraman/source/audio/kata-sugeng.opus';
+import dialogStartAudio from '../../../../assets/audio/dialog-start.opus';
+import kalimatSugengAudio from '../../../../assets/audio/kalimat-sugeng.opus';
+import kataSugengAudio from '../../../../assets/audio/kata-sugeng.opus';
 import { SettingsRepository } from '../../../infrastructure/database/settingsRepository';
 
 export type AudioPlayStatus = 'idle' | 'loading' | 'playing' | 'unavailable' | 'error';

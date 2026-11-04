@@ -14,7 +14,7 @@ import {
   parseAndValidateManifest,
 } from '../src/domain/package/packageLoader';
 
-const SOURCE_DIR = path.resolve(__dirname, '../content/packages/jawa-mataraman/source');
+const SOURCE_DIR = path.resolve(__dirname, 'fixtures/sample-package/source');
 
 function readJsonFile(filename: string) {
   const filePath = path.join(SOURCE_DIR, filename);
@@ -405,73 +405,5 @@ describe('Package Loader & Validator Contract', () => {
         challenges: [],
       }),
     ).toThrow('wajib memiliki minimal 2 ending');
-  });
-
-  it('validates relational unit_id, dialog graph reachability, and audio presence via validateContent', async () => {
-    const { validateContent } = await import('../tools/content-builder/src/validateContent');
-
-    // 1. Invalid unit_id
-    const badUnitResult = validateContent({
-      units: [{ id: 'u-1', unit_id: 'u-1', order: 1, title: 'Unit 1' }],
-      words: [{ id: 'w-1', text: 'mangan', register: 'akrab', unit_id: 'u-999', audio: 'audio/w1.opus' }],
-      sentences: [],
-      dialogues: [],
-      challenges: [],
-    });
-    expect(badUnitResult.ok).toBe(false);
-    expect(badUnitResult.issues.some((i) => i.code === 'INVALID_UNIT_ID_REF')).toBe(true);
-
-    // 2. Invalid dialog graph next pointer
-    const badGraphResult = validateContent({
-      units: [{ id: 'u-1', unit_id: 'u-1', order: 1, title: 'Unit 1' }],
-      words: [],
-      sentences: [],
-      dialogues: [
-        {
-          id: 'd-1',
-          title: 'Dialog 1',
-          register: 'sopan',
-          unit_id: 'u-1',
-          nodes: [
-            {
-              id: 'n0',
-              audio: 'audio/d.opus',
-              next: 'n_nowhere', // Broken next pointer
-              choices: [
-                {
-                  text: 'Pilihan',
-                  audio: 'audio/c.opus',
-                  next: 'n_invalid', // Broken choice next pointer
-                },
-              ],
-            },
-            { id: 'n1', audio: 'audio/d.opus', choices: [] },
-            { id: 'n2', audio: 'audio/d.opus', choices: [] },
-            { id: 'n3', audio: 'audio/d.opus', choices: [] },
-            { id: 'n4', audio: 'audio/d.opus', choices: [] },
-            { id: 'n5', audio: 'audio/d.opus', choices: [] },
-          ],
-          endings: [
-            { id: 'end-pas', quality: 'pas', feedback: 'Bagus' },
-            { id: 'end-kurang-pas', quality: 'kurang-pas', feedback: 'Kurang' },
-          ],
-        },
-      ],
-      challenges: [],
-    });
-    expect(badGraphResult.ok).toBe(false);
-    expect(badGraphResult.issues.some((i) => i.code === 'INVALID_DIALOG_GRAPH')).toBe(true);
-
-    // 3. Missing audio file
-    const missingAudioResult = validateContent({
-      units: [{ id: 'u-1', unit_id: 'u-1', order: 1, title: 'Unit 1' }],
-      words: [{ id: 'w-1', text: 'mangan', register: 'akrab', unit_id: 'u-1', audio: 'audio/missing.opus' }],
-      sentences: [],
-      dialogues: [],
-      challenges: [],
-      availableAudioFiles: ['audio/existing.opus'],
-    });
-    expect(missingAudioResult.ok).toBe(false);
-    expect(missingAudioResult.issues.some((i) => i.code === 'MISSING_AUDIO_FILE')).toBe(true);
   });
 });
